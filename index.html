@@ -3,68 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firestore Data Display</title>
+    <title>Firestore Data Display with Auth</title>
     <style>
         body { font-family: Arial, sans-serif; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .auth-buttons { margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Game Information</h1>
+        <div class="auth-buttons">
+            <button id="login-button">Login with Google</button>
+            <button id="logout-button" style="display: none;">Logout</button>
+        </div>
         <div id="game-info" class="game-info">
-            Loading...
+            Please log in to see the game information.
         </div>
     </div>
 
-    <!-- Add Firebase SDKs -->
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
         // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-          apiKey: "AIzaSyC5uKIR6NFF_tlzXjq_FTzSxOV5nS5-TAU",
-          authDomain: "trofeu-marcelao.firebaseapp.com",
-          projectId: "trofeu-marcelao",
-          storageBucket: "trofeu-marcelao.appspot.com",
-          messagingSenderId: "996282210116",
-          appId: "1:996282210116:web:bee27fc96214ce2d872911",
-          measurementId: "G-G5SH96VTYV"
+            apiKey: "AIzaSyC5uKIR6NFF_tlzXjq_FTzSxOV5nS5-TAU",
+            authDomain: "trofeu-marcelao.firebaseapp.com",
+            projectId: "trofeu-marcelao",
+            storageBucket: "trofeu-marcelao.appspot.com",
+            messagingSenderId: "996282210116",
+            appId: "1:996282210116:web:bee27fc96214ce2d872911",
+            measurementId: "G-G5SH96VTYV"
         };
-      
+        
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getFirestore(app);
-
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        
+        // DOM Elements
+        const gameInfoDiv = document.getElementById('game-info');
+        const loginButton = document.getElementById('login-button');
+        const logoutButton = document.getElementById('logout-button');
+        
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'inline';
+                fetchGameInfo();
+            } else {
+                loginButton.style.display = 'inline';
+                logoutButton.style.display = 'none';
+                gameInfoDiv.innerHTML = 'Please log in to see the game information.';
+            }
+        });
+        
+        // Login
+        loginButton.addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log("User signed in: ", result.user);
+                })
+                .catch((error) => {
+                    console.error("Error signing in: ", error);
+                });
+        });
+        
+        // Logout
+        logoutButton.addEventListener('click', () => {
+            signOut(auth)
+                .then(() => {
+                    console.log("User signed out");
+                })
+                .catch((error) => {
+                    console.error("Error signing out: ", error);
+                });
+        });
+        
         // Function to fetch and display game info
         async function fetchGameInfo() {
-            const gameInfoDiv = document.getElementById('game-info');
-            const docRef = doc(db, "games", "jogos");
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const gameData = docSnap.data();
-                const gameHTML = `
-                    <p><strong>Casa:</strong> ${gameData.casa}</p>
-                    <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
-                    <p><strong>Fora:</strong> ${gameData.fora}</p>
-                    <p><strong>Resultado:</strong> ${gameData.resultado}</p>
-                `;
-                gameInfoDiv.innerHTML = gameHTML;
-            } else {
-                gameInfoDiv.innerHTML = "No game information found.";
+            try {
+                const docRef = doc(db, "games", "jogos");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const gameData = docSnap.data();
+                    const gameHTML = `
+                        <p><strong>Casa:</strong> ${gameData.casa}</p>
+                        <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
+                        <p><strong>Fora:</strong> ${gameData.fora}</p>
+                        <p><strong>Resultado:</strong> ${gameData.resultado}</p>
+                    `;
+                    gameInfoDiv.innerHTML = gameHTML;
+                } else {
+                    gameInfoDiv.innerHTML = "No game information found.";
+                }
+            } catch (error) {
+                console.error("Error fetching game information:", error);
+                gameInfoDiv.innerHTML = "Error loading game information.";
             }
         }
-
-        // Fetch game info on load
-        fetchGameInfo();
     </script>
 </body>
 </html>

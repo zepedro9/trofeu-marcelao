@@ -40,7 +40,7 @@
       
         // Initialize Firebase
         const firebase = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const analytics = getAnalytics(firebase);
 
         var db = firebase.firestore();
 

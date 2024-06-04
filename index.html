@@ -17,7 +17,6 @@
         <h1>Game Information</h1>
         <div class="auth-buttons">
             <button id="show-login-form">Login</button>
-            <button id="show-signup-form">Sign Up</button>
             <button id="logout-button" style="display: none;">Logout</button>
         </div>
         <div id="login-form" class="auth-form">
@@ -56,16 +55,13 @@
         // DOM Elements
         const gameInfoDiv = document.getElementById('game-info');
         const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
         const showLoginFormButton = document.getElementById('show-login-form');
         const loginButton = document.getElementById('login-button');
-        const signupButton = document.getElementById('signup-button');
         const logoutButton = document.getElementById('logout-button');
         
         // Show login form
         showLoginFormButton.addEventListener('click', () => {
             loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
         });
         
         // Login
@@ -97,12 +93,10 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showLoginFormButton.style.display = 'none';
-                showSignupFormButton.style.display = 'none';
                 logoutButton.style.display = 'inline';
                 fetchGameInfo();
             } else {
                 showLoginFormButton.style.display = 'inline';
-                showSignupFormButton.style.display = 'inline';
                 logoutButton.style.display = 'none';
                 gameInfoDiv.innerHTML = 'Please log in to see the game information.';
             }

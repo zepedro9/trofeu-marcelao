@@ -39,31 +39,28 @@
         };
       
         // Initialize Firebase
-        const firebase = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(firebase);
-
-        var db = firebase.firestore();
+        const db = getFirestore(app);
 
         // Function to fetch and display game info
-        function fetchGameInfo() {
-            var gameInfoDiv = document.getElementById('game-info');
-            db.collection("games").doc("jogos").get().then((doc) => {
-                if (doc.exists) {
-                    var gameData = doc.data();
-                    var gameHTML = `
-                        <p><strong>Casa:</strong> ${gameData.casa}</p>
-                        <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
-                        <p><strong>Fora:</strong> ${gameData.fora}</p>
-                        <p><strong>Resultado:</strong> ${gameData.resultado}</p>
-                    `;
-                    gameInfoDiv.innerHTML = gameHTML;
-                } else {
-                    gameInfoDiv.innerHTML = "No game information found.";
-                }
-            }).catch((error) => {
-                console.error("Error fetching game information:", error);
-                gameInfoDiv.innerHTML = "Error loading game information.";
-            });
+        async function fetchGameInfo() {
+            const gameInfoDiv = document.getElementById('game-info');
+            const docRef = doc(db, "games", "jogos");
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const gameData = docSnap.data();
+                const gameHTML = `
+                    <p><strong>Casa:</strong> ${gameData.casa}</p>
+                    <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
+                    <p><strong>Fora:</strong> ${gameData.fora}</p>
+                    <p><strong>Resultado:</strong> ${gameData.resultado}</p>
+                `;
+                gameInfoDiv.innerHTML = gameHTML;
+            } else {
+                gameInfoDiv.innerHTML = "No game information found.";
+            }
         }
 
         // Fetch game info on load

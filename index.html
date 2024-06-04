@@ -40,7 +40,7 @@
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(firebase);
+        const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
         // Function to fetch and display game info

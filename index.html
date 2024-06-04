@@ -3,20 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firestore Data Display with Auth</title>
+    <title>Firestore Data Display with Email/Password Auth</title>
     <style>
         body { font-family: Arial, sans-serif; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-        .auth-buttons { margin-bottom: 20px; }
+        .auth-buttons, .auth-form { margin-bottom: 20px; }
+        .auth-form { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Game Information</h1>
         <div class="auth-buttons">
-            <button id="login-button">Login with Google</button>
+            <button id="show-login-form">Login</button>
+            <button id="show-signup-form">Sign Up</button>
             <button id="logout-button" style="display: none;">Logout</button>
+        </div>
+        <div id="login-form" class="auth-form">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email" />
+            <input type="password" id="login-password" placeholder="Password" />
+            <button id="login-button">Login</button>
+        </div>
+        <div id="signup-form" class="auth-form">
+            <h2>Sign Up</h2>
+            <input type="email" id="signup-email" placeholder="Email" />
+            <input type="password" id="signup-password" placeholder="Password" />
+            <button id="signup-button">Sign Up</button>
         </div>
         <div id="game-info" class="game-info">
             Please log in to see the game information.
@@ -27,7 +41,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -44,70 +58,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
         
         // DOM Elements
         const gameInfoDiv = document.getElementById('game-info');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showLoginFormButton = document.getElementById('show-login-form');
+        const showSignupFormButton = document.getElementById('show-signup-form');
         const loginButton = document.getElementById('login-button');
+        const signupButton = document.getElementById('signup-button');
         const logoutButton = document.getElementById('logout-button');
         
-        // Auth state listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'inline';
-                fetchGameInfo();
-            } else {
-                loginButton.style.display = 'inline';
-                logoutButton.style.display = 'none';
-                gameInfoDiv.innerHTML = 'Please log in to see the game information.';
-            }
+        // Show login form
+        showLoginFormButton.addEventListener('click', () => {
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
         });
         
-        // Login
-        loginButton.addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    console.log("User signed in: ", result.user);
-                })
-                .catch((error) => {
-                    console.error("Error signing in: ", error);
-                });
-        });
-        
-        // Logout
-        logoutButton.addEventListener('click', () => {
-            signOut(auth)
-                .then(() => {
-                    console.log("User signed out");
-                })
-                .catch((error) => {
-                    console.error("Error signing out: ", error);
-                });
-        });
-        
-        // Function to fetch and display game info
-        async function fetchGameInfo() {
-            try {
-                const docRef = doc(db, "games", "jogos");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const gameData = docSnap.data();
-                    const gameHTML = `
-                        <p><strong>Casa:</strong> ${gameData.casa}</p>
-                        <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
-                        <p><strong>Fora:</strong> ${gameData.fora}</p>
-                        <p><strong>Resultado:</strong> ${gameData.resultado}</p>
-                    `;
-                    gameInfoDiv.innerHTML = gameHTML;
-                } else {
-                    gameInfoDiv.innerHTML = "No game information found.";
-                }
-            } catch (error) {
-                console.error("Error fetching game information:", error);
-                gameInfoDiv.innerHTML = "Error loading game information.";
-            }
-        }
-    </script>
-</body>
-</html>
+        // Show signup form
+        showSignupFormButton.addEventListener('click', () => {
+            signupForm.style.display = 'block';
+            loginForm.style.displa

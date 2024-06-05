@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firestore Data Display with Email/Password Auth</title>
+    <title>Troféu Marcelão</title>
     <style>
         body { font-family: Arial, sans-serif; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
         .auth-buttons, .auth-form { margin-bottom: 20px; }
         .auth-form { display: none; }
+        footer { margin-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Game Information</h1>
-        <div class="auth-buttons">
-            <button id="show-login-form">Login</button>
-            <button id="logout-button" style="display: none;">Logout</button>
-        </div>
-        <div id="login-form" class="auth-form">
-            <h2>Login</h2>
-            <input type="email" id="login-email" placeholder="Email" />
-            <input type="password" id="login-password" placeholder="Password" />
-            <button id="login-button">Login</button>
-        </div>
+        <h1>Troféu Marcelão</h1>
         <div id="game-info" class="game-info">
             Loading...
         </div>
+        <footer>
+            <button id="show-login-form">Admin Login</button>
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <input type="email" id="login-email" placeholder="Email" />
+                <input type="password" id="login-password" placeholder="Password" />
+                <button id="login-button">Login</button>
+            </div>
+            <button id="logout-button" style="display: none;">Logout</button>
+        </footer>
     </div>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
-        // Your web app's Firebase configuration
+
         const firebaseConfig = {
             apiKey: "AIzaSyC5uKIR6NFF_tlzXjq_FTzSxOV5nS5-TAU",
             authDomain: "trofeu-marcelao.firebaseapp.com",
@@ -46,25 +45,21 @@
             appId: "1:996282210116:web:bee27fc96214ce2d872911",
             measurementId: "G-G5SH96VTYV"
         };
-        
-        // Initialize Firebase
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        
-        // DOM Elements
+
         const gameInfoDiv = document.getElementById('game-info');
         const loginForm = document.getElementById('login-form');
         const showLoginFormButton = document.getElementById('show-login-form');
         const loginButton = document.getElementById('login-button');
         const logoutButton = document.getElementById('logout-button');
-        
-        // Show login form
+
         showLoginFormButton.addEventListener('click', () => {
             loginForm.style.display = 'block';
         });
-        
-        // Login
+
         loginButton.addEventListener('click', () => {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
@@ -77,8 +72,7 @@
                     console.error("Error signing in: ", error);
                 });
         });
-        
-        // Logout
+
         logoutButton.addEventListener('click', () => {
             signOut(auth)
                 .then(() => {
@@ -88,21 +82,17 @@
                     console.error("Error signing out: ", error);
                 });
         });
-        
-        // Auth state listener
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showLoginFormButton.style.display = 'none';
                 logoutButton.style.display = 'inline';
-                fetchGameInfo();
             } else {
                 showLoginFormButton.style.display = 'inline';
                 logoutButton.style.display = 'none';
-                gameInfoDiv.innerHTML = 'Please log in to see the game information.';
             }
         });
-        
-        // Function to fetch and display game info
+
         async function fetchGameInfo() {
             try {
                 const jogosCol = collection(db, "jogos");
@@ -122,7 +112,6 @@
             }
         }
 
-        // Fetch game info on load
         fetchGameInfo();
     </script>
 </body>

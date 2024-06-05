@@ -1,7 +1,75 @@
-body { font-family: Arial, sans-serif; }
-.container { max-width: 600px; margin: 0 auto; padding: 20px; }
-.game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-.auth-buttons, .auth-form { margin-bottom: 20px; }
-.auth-form { display: none; }
-footer { margin-top: 20px; text-align: center; }
-.admin-section { margin-top: 20px; }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top center, rgba(255, 215, 0, 0.1), #000);
+    color: #fff;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo img {
+    width: 150px;
+    margin: 20px auto;
+}
+
+h1 {
+    color: gold;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    border: 1px solid gold;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.auth-buttons, .auth-form {
+    margin-bottom: 20px;
+}
+
+.auth-form {
+    display: none;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+button {
+    background-color: gold;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #ffd700;
+}
+
+input {
+    padding: 10px;
+    margin: 5px 0;
+    width: calc(100% - 22px);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-section {
+    margin-top: 20px;
+}
+
+form input[type="datetime-local"] {
+    width: calc(100% - 22px);
+}

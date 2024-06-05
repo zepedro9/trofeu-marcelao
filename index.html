@@ -55,13 +55,23 @@
         // DOM Elements
         const gameInfoDiv = document.getElementById('game-info');
         const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
         const showLoginFormButton = document.getElementById('show-login-form');
+        const showSignupFormButton = document.getElementById('show-signup-form');
         const loginButton = document.getElementById('login-button');
+        const signupButton = document.getElementById('signup-button');
         const logoutButton = document.getElementById('logout-button');
         
         // Show login form
         showLoginFormButton.addEventListener('click', () => {
             loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+        });
+        
+        // Show signup form
+        showSignupFormButton.addEventListener('click', () => {
+            signupForm.style.display = 'block';
+            loginForm.style.display = 'none';
         });
         
         // Login
@@ -75,6 +85,20 @@
                 })
                 .catch((error) => {
                     console.error("Error signing in: ", error);
+                });
+        });
+        
+        // Sign up
+        signupButton.addEventListener('click', () => {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log("User signed up: ", userCredential.user);
+                    signupForm.style.display = 'none';
+                })
+                .catch((error) => {
+                    console.error("Error signing up: ", error);
                 });
         });
         
@@ -93,10 +117,12 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showLoginFormButton.style.display = 'none';
+                showSignupFormButton.style.display = 'none';
                 logoutButton.style.display = 'inline';
                 fetchGameInfo();
             } else {
                 showLoginFormButton.style.display = 'inline';
+                showSignupFormButton.style.display = 'inline';
                 logoutButton.style.display = 'none';
                 gameInfoDiv.innerHTML = 'Please log in to see the game information.';
             }
@@ -105,25 +131,25 @@
         // Function to fetch and display game info
         async function fetchGameInfo() {
             try {
-                const docRef = doc(db, "jogos", "jogos");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const gameData = docSnap.data();
-                    const gameHTML = `
-                        <p><strong>Casa:</strong> ${gameData.casa}</p>
-                        <p><strong>Data:</strong> ${gameData.data.toDate().toLocaleString()}</p>
-                        <p><strong>Fora:</strong> ${gameData.fora}</p>
-                        <p><strong>Resultado:</strong> ${gameData.resultado}</p>
-                    `;
-                    gameInfoDiv.innerHTML = gameHTML;
-                } else {
-                    gameInfoDiv.innerHTML = "No game information found.";
-                }
+                const jogosCol = collection(db, "jogos");
+                const jogosSnapshot = await getDocs(jogosCol);
+                const jogosList = jogosSnapshot.docs.map(doc => doc.data());
+                gameInfoDiv.innerHTML = jogosList.map(game => `
+                    <div>
+                        <p><strong>Casa:</strong> ${game.casa}</p>
+                        <p><strong>Data:</strong> ${game.data.toDate().toLocaleString()}</p>
+                        <p><strong>Fora:</strong> ${game.fora}</p>
+                        <p><strong>Resultado:</strong> ${game.resultado}</p>
+                    </div>
+                `).join('');
             } catch (error) {
                 console.error("Error fetching game information:", error);
                 gameInfoDiv.innerHTML = "Error loading game information.";
             }
         }
+
+        // Fetch game info on load
+        fetchGameInfo();
     </script>
 </body>
 </html>

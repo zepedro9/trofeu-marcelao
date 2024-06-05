@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Troféu Marcelão</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-        .auth-buttons, .auth-form { margin-bottom: 20px; }
-        .auth-form { display: none; }
-        footer { margin-top: 20px; text-align: center; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Troféu Marcelão</h1>
         <div id="game-info" class="game-info">
             Loading...
+        </div>
+        <div id="admin-section" class="admin-section" style="display: none;">
+            <h2>Add New Game</h2>
+            <form id="game-form">
+                <input type="text" id="casa" placeholder="Casa" required />
+                <input type="text" id="fora" placeholder="Fora" required />
+                <input type="datetime-local" id="data" placeholder="Data" required />
+                <input type="text" id="resultado" placeholder="Resultado" />
+                <button type="submit">Submit Game</button>
+            </form>
         </div>
         <footer>
             <button id="show-login-form">Admin Login</button>
@@ -31,88 +34,7 @@
         </footer>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC5uKIR6NFF_tlzXjq_FTzSxOV5nS5-TAU",
-            authDomain: "trofeu-marcelao.firebaseapp.com",
-            projectId: "trofeu-marcelao",
-            storageBucket: "trofeu-marcelao.appspot.com",
-            messagingSenderId: "996282210116",
-            appId: "1:996282210116:web:bee27fc96214ce2d872911",
-            measurementId: "G-G5SH96VTYV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        const gameInfoDiv = document.getElementById('game-info');
-        const loginForm = document.getElementById('login-form');
-        const showLoginFormButton = document.getElementById('show-login-form');
-        const loginButton = document.getElementById('login-button');
-        const logoutButton = document.getElementById('logout-button');
-
-        showLoginFormButton.addEventListener('click', () => {
-            loginForm.style.display = 'block';
-        });
-
-        loginButton.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    console.log("User signed in: ", userCredential.user);
-                    loginForm.style.display = 'none';
-                })
-                .catch((error) => {
-                    console.error("Error signing in: ", error);
-                });
-        });
-
-        logoutButton.addEventListener('click', () => {
-            signOut(auth)
-                .then(() => {
-                    console.log("User signed out");
-                })
-                .catch((error) => {
-                    console.error("Error signing out: ", error);
-                });
-        });
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                showLoginFormButton.style.display = 'none';
-                logoutButton.style.display = 'inline';
-            } else {
-                showLoginFormButton.style.display = 'inline';
-                logoutButton.style.display = 'none';
-            }
-        });
-
-        async function fetchGameInfo() {
-            try {
-                const jogosCol = collection(db, "jogos");
-                const jogosSnapshot = await getDocs(jogosCol);
-                const jogosList = jogosSnapshot.docs.map(doc => doc.data());
-                gameInfoDiv.innerHTML = jogosList.map(game => `
-                    <div>
-                        <p><strong>Casa:</strong> ${game.casa}</p>
-                        <p><strong>Data:</strong> ${game.data.toDate().toLocaleString()}</p>
-                        <p><strong>Fora:</strong> ${game.fora}</p>
-                        <p><strong>Resultado:</strong> ${game.resultado}</p>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error("Error fetching game information:", error);
-                gameInfoDiv.innerHTML = "Error loading game information.";
-            }
-        }
-
-        fetchGameInfo();
-    </script>
+    <script type="module" src="firebaseConfig.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,7 @@
+body { font-family: Arial, sans-serif; }
+.container { max-width: 600px; margin: 0 auto; padding: 20px; }
+.game-info { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+.auth-buttons, .auth-form { margin-bottom: 20px; }
+.auth-form { display: none; }
+footer { margin-top: 20px; text-align: center; }
+.admin-section { margin-top: 20px; }

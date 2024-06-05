@@ -17,6 +17,7 @@
         <h1>Game Information</h1>
         <div class="auth-buttons">
             <button id="show-login-form">Login</button>
+            <button id="show-signup-form">Sign Up</button>
             <button id="logout-button" style="display: none;">Logout</button>
         </div>
         <div id="login-form" class="auth-form">
@@ -25,16 +26,22 @@
             <input type="password" id="login-password" placeholder="Password" />
             <button id="login-button">Login</button>
         </div>
+        <div id="signup-form" class="auth-form">
+            <h2>Sign Up</h2>
+            <input type="email" id="signup-email" placeholder="Email" />
+            <input type="password" id="signup-password" placeholder="Password" />
+            <button id="signup-button">Sign Up</button>
+        </div>
         <div id="game-info" class="game-info">
-            Please log in to see the game information.
+            Loading...
         </div>
     </div>
 
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
         // Your web app's Firebase configuration
         const firebaseConfig = {

@@ -2,8 +2,36 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: radial-gradient(circle at top center, rgba(255, 215, 0, 0.1), #000);
+    background: radial-gradient(circle at top center, #2a2a2a, #111);
     color: #fff;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111;
+    padding: 10px 20px;
+}
+
+.logo img {
+    width: 50px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: gold;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
 }
 
 .container {
@@ -11,11 +39,6 @@ body {
     margin: 0 auto;
     padding: 20px;
     text-align: center;
-}
-
-.logo img {
-    width: 150px;
-    margin: 20px auto;
 }
 
 h1 {

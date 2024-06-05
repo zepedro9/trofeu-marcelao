@@ -58,7 +58,7 @@ async function fetchGameInfo() {
         const jogosSnapshot = await getDocs(jogosCol);
         const jogosList = jogosSnapshot.docs.map(doc => doc.data());
         gameInfoDiv.innerHTML = jogosList.map(game => `
-            <div>
+            <div class="game-box">
                 <p><strong>Casa:</strong> ${game.casa}</p>
                 <p><strong>Data:</strong> ${game.data.toDate().toLocaleString()}</p>
                 <p><strong>Fora:</strong> ${game.fora}</p>

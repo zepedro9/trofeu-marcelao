@@ -105,7 +105,7 @@
         // Function to fetch and display game info
         async function fetchGameInfo() {
             try {
-                const docRef = doc(db, "games", "jogos");
+                const docRef = doc(db, "jogos", "jogos");
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const gameData = docSnap.data();

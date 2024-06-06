@@ -1,17 +1,16 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #222;
     color: #fff;
+    background-color: #222;
 }
 
 nav {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     background-color: #111;
-    padding: 10px 20px;
+    justify-content: flex-start;
 }
 
 .nav-left {
@@ -20,34 +19,40 @@ nav {
 }
 
 .logo img {
-    width: 50px;
+    width: 60px;
+    padding: 10px;
 }
 
 .nav-links {
-    list-style: none;
-    display: flex;
     gap: 20px;
+    display: flex;
+    list-style: none;
     margin-left: 20px;
 }
 
 .nav-links a {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
     color: #FFD700;
+    padding: 30px 20px;
     text-decoration: none;
-    font-size: 18px;
-    padding: 10px 15px;
-    border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .nav-links a:hover {
-    background-color: #FFD700;
     color: #222;
+    background-color: #FFD700;
+}
+
+.nav-links i {
+    margin-right: 8px;
 }
 
 .container {
+    padding: 20px;
     max-width: 600px;
     margin: 20px auto;
-    padding: 20px;
     text-align: center;
 }
 
@@ -57,19 +62,19 @@ h1 {
 }
 
 .game-info {
+    gap: 20px;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
     justify-content: center;
 }
 
 .game-box {
-    border: 1px solid #FFD700;
-    padding: 10px;
-    background-color: #333;
-    border-radius: 5px;
     width: 100%;
+    padding: 10px;
     max-width: 300px;
+    border-radius: 5px;
+    background-color: #333;
+    border: 1px solid #FFD700;
 }
 
 .auth-buttons, .auth-form {
@@ -86,27 +91,27 @@ footer {
 }
 
 button {
-    background-color: #FFD700;
     color: #222;
     border: none;
-    padding: 10px 20px;
+    margin: 5px;
     cursor: pointer;
     border-radius: 5px;
-    margin: 5px;
+    padding: 10px 20px;
+    background-color: #FFD700;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button:hover {
-    background-color: #FFCC00;
     color: #222;
+    background-color: #FFCC00;
 }
 
 input {
     padding: 10px;
     margin: 5px 0;
+    border-radius: 5px;
     width: calc(100% - 22px);
     border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
 .admin-section {

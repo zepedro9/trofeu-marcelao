@@ -17,7 +17,8 @@
             <ul class="nav-links">
                 <li><a href="#" id="jogos-link" class="active"><i class="fas fa-futbol"></i> Jogos</a></li>
                 <li><a href="#" id="competicoes-link"><i class="fas fa-trophy"></i> Competições</a></li>
-            </ul>
+                <li><a href="#" id="classificacao-link"><i class="fas fa-list-ol"></i> Classificação</a></li>
+            </ul>            
         </div>
     </nav>
     <div class="container" id="jogos-page">
@@ -31,16 +32,23 @@
                 <input type="text" id="casa" placeholder="Casa" required />
                 <input type="text" id="fora" placeholder="Fora" required />
                 <input type="datetime-local" id="data" placeholder="Data" required />
+                <input type="text" id="competicao" placeholder="Competição" required />
                 <input type="text" id="resultado" placeholder="Resultado" />
+                <input type="text" id="vencedor" placeholder="Vencedor" />
                 <button type="submit">Submit Game</button>
             </form>
         </div>
     </div>
-
+    
     <div class="container" id="competicoes-page" style="display: none;">
         <h1>Competições</h1>
         <!-- Add content for Competições page here -->
     </div>
+    
+    <div class="container" id="classificacao-page" style="display: none;">
+        <h1>Classificação</h1>
+        <!-- Add content for Classificação page here -->
+    </div>    
 
     <footer>
         <button id="show-login-form">Admin Login</button>

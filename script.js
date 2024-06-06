@@ -15,25 +15,39 @@ const gameForm = document.getElementById('game-form');
 
 const jogosPage = document.getElementById('jogos-page');
 const competicoesPage = document.getElementById('competicoes-page');
+const classificacaoPage = document.getElementById('classificacao-page');
 const jogosLink = document.getElementById('jogos-link');
 const competicoesLink = document.getElementById('competicoes-link');
+const classificacaoLink = document.getElementById('classificacao-link');
 
 function showPage(page) {
     if (page === 'jogos') {
         jogosPage.style.display = 'block';
         competicoesPage.style.display = 'none';
+        classificacaoPage.style.display = 'none';
         jogosLink.classList.add('active');
         competicoesLink.classList.remove('active');
+        classificacaoLink.classList.remove('active');
     } else if (page === 'competicoes') {
         jogosPage.style.display = 'none';
         competicoesPage.style.display = 'block';
+        classificacaoPage.style.display = 'none';
         jogosLink.classList.remove('active');
         competicoesLink.classList.add('active');
+        classificacaoLink.classList.remove('active');
+    } else if (page === 'classificacao') {
+        jogosPage.style.display = 'none';
+        competicoesPage.style.display = 'none';
+        classificacaoPage.style.display = 'block';
+        jogosLink.classList.remove('active');
+        competicoesLink.classList.remove('active');
+        classificacaoLink.classList.add('active');
     }
 }
 
 jogosLink.addEventListener('click', () => showPage('jogos'));
 competicoesLink.addEventListener('click', () => showPage('competicoes'));
+classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
 showLoginFormButton.addEventListener('click', () => {
     loginForm.style.display = 'block';
@@ -81,10 +95,11 @@ async function fetchGameInfo() {
         const jogosList = jogosSnapshot.docs.map(doc => doc.data());
         gameInfoDiv.innerHTML = jogosList.map(game => `
             <div class="game-box">
-                <p><strong>Casa:</strong> ${game.casa}</p>
-                <p><strong>Data:</strong> ${game.data.toDate().toLocaleString()}</p>
-                <p><strong>Fora:</strong> ${game.fora}</p>
-                <p><strong>Resultado:</strong> ${game.resultado}</p>
+                <p><strong>${game.casa} Vs ${game.fora}</strong></p>
+                <p>${game.competicao}</p>
+                <p>${game.data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} - ${game.data.toDate().toLocaleDateString('en-GB')}</p>
+                ${game.resultado ? `<p><strong>Resultado:</strong> ${game.resultado}</p>` : ''}
+                ${game.vencedor ? `<p><strong>Vencedor:</strong> ${game.vencedor}</p>` : ''}
             </div>
         `).join('');
     } catch (error) {
@@ -98,14 +113,18 @@ gameForm.addEventListener('submit', async (e) => {
     const casa = document.getElementById('casa').value;
     const fora = document.getElementById('fora').value;
     const data = document.getElementById('data').value;
+    const competicao = document.getElementById('competicao').value;
     const resultado = document.getElementById('resultado').value;
+    const vencedor = document.getElementById('vencedor').value;
 
     try {
         await addDoc(collection(db, "jogos"), {
             casa: casa,
             fora: fora,
             data: new Date(data),
-            resultado: resultado
+            competicao: competicao,
+            resultado: resultado,
+            vencedor: vencedor
         });
         fetchGameInfo();
         gameForm.reset();

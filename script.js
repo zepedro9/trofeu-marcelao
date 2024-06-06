@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminSection = document.getElementById('admin-section');
     const gameForm = document.getElementById('game-form');
     const jogosPage = document.getElementById('jogos-page');
-    const competicoesPage = document.getElementById('competicoes-page');
+    const competitionPage = document.getElementById('competition-page');
     const classificacaoPage = document.getElementById('classificacao-page');
     const jogosLink = document.getElementById('jogos-link');
-    const competicoesLink = document.getElementById('competicoes-link');
+    const competitionLink = document.getElementById('competition-link');
     const classificacaoLink = document.getElementById('classificacao-link');
     const competitionInfoDiv = document.getElementById('competition-info');
     const competitionForm = document.getElementById('competition-form');
@@ -26,30 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPage(page) {
         if (page === 'jogos') {
             jogosPage.style.display = 'block';
-            competicoesPage.style.display = 'none';
+            competitionPage.style.display = 'none';
             classificacaoPage.style.display = 'none';
             jogosLink.classList.add('active');
-            competicoesLink.classList.remove('active');
+            competitionLink.classList.remove('active');
             classificacaoLink.classList.remove('active');
-        } else if (page === 'competicoes') {
+        } else if (page === 'competition') {
             jogosPage.style.display = 'none';
-            competicoesPage.style.display = 'block';
+            competitionPage.style.display = 'block';
             classificacaoPage.style.display = 'none';
             jogosLink.classList.remove('active');
-            competicoesLink.classList.add('active');
+            competitionLink.classList.add('active');
             classificacaoLink.classList.remove('active');
         } else if (page === 'classificacao') {
             jogosPage.style.display = 'none';
-            competicoesPage.style.display = 'none';
+            competitionPage.style.display = 'none';
             classificacaoPage.style.display = 'block';
             jogosLink.classList.remove('active');
-            competicoesLink.classList.remove('active');
+            competitionLink.classList.remove('active');
             classificacaoLink.classList.add('active');
         }
     }
 
     jogosLink.addEventListener('click', () => showPage('jogos'));
-    competicoesLink.addEventListener('click', () => showPage('competicoes'));
+    competitionLink.addEventListener('click', () => showPage('competition'));
     classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
     adminLoginButton.addEventListener('click', () => {

@@ -69,10 +69,19 @@
     
     <div class="container" id="classificacao-page" style="display: none;">
         <h1>Classificação</h1>
-        <div id="leaderboard" class="leaderboard">
-            Loading...
-        </div>
-    </div>    
+        <table id="leaderboard" class="leaderboard">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Pontos</th>
+                    <th>Ganhos (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Leaderboard rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>       
 
     <script type="module" src="firebaseConfig.js"></script>
     <script type="module" src="script.js"></script>

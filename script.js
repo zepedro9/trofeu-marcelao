@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchCompetitionInfo() {
         try {
-            const competitionsCol = collection(db, "competitions");
+            const competitionsCol = collection(db, "competicoes");
             const competitionsSnapshot = await getDocs(competitionsCol);
             const competitionsList = competitionsSnapshot.docs.map(doc => doc.data());
             competitionInfoDiv.innerHTML = competitionsList.map(comp => `
@@ -147,18 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const jogadoresSnapshot = await getDocs(jogadoresCol);
             const jogadoresList = jogadoresSnapshot.docs.map(doc => doc.data());
             jogadoresList.sort((a, b) => b.Pontos - a.Pontos); // Sort players by points in descending order
-            leaderboardDiv.innerHTML = jogadoresList.map(player => `
-                <div class="player-box">
-                    <p class="highlight">${player.Nome}</p>
-                    <p class="subdued">Pontos: ${player.Pontos}</p>
-                    <p class="subdued">Ganhos: ${player.Ganhos.toFixed(2)} €</p>
-                </div>
+            leaderboardDiv.querySelector('tbody').innerHTML = jogadoresList.map(player => `
+                <tr>
+                    <td class="highlight">${player.Nome}</td>
+                    <td class="subdued">${player.Pontos}</td>
+                    <td class="subdued">€${player.Ganhos.toFixed(2)}</td>
+                </tr>
             `).join('');
         } catch (error) {
             console.error("Error fetching leaderboard information:", error);
-            leaderboardDiv.innerHTML = "Error loading leaderboard information.";
+            leaderboardDiv.querySelector('tbody').innerHTML = "<tr><td colspan='3'>Error loading leaderboard information.</td></tr>";
         }
-    }
+    }    
 
     gameForm.addEventListener('submit', async (e) => {
         e.preventDefault();

@@ -84,18 +84,18 @@ h1 {
 }
 
 .game-box p {
-    margin: 8px 0;
+    margin: 5px 0;
     line-height: 1.4;
 }
 
 .game-box .highlight {
-    font-size: 1.4em;
+    font-size: 1.5em;
     font-weight: bold;
     color: #fff;
 }
 
 .game-box .subdued {
-    font-size: 0.8em;
+    font-size: 1em;
     color: #ccc;
 }
 
@@ -168,26 +168,47 @@ form input[type="datetime-local"] {
 }
 
 .competition-box p {
-    margin: 8px 0;
+    margin: 5px 0;
     line-height: 1.4;
 }
 
 .competition-box .highlight {
-    font-size: 1.4em;
+    font-size: 1.5em;
     font-weight: bold;
     color: #fff;
 }
 
 .competition-box .subdued {
-    font-size: 0.8em;
+    font-size: 1em;
     color: #ccc;
 }
 
 .leaderboard {
-    gap: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.leaderboard th, .leaderboard td {
+    border: 1px solid #FFD700;
+    padding: 10px;
+    text-align: left;
+}
+
+.leaderboard th {
+    background-color: #444;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.leaderboard td.highlight {
+    font-size: 1.2em;
+    color: #fff;
+}
+
+.leaderboard td.subdued {
+    font-size: 1em;
+    color: #ccc;
 }
 
 .player-box {
@@ -211,6 +232,6 @@ form input[type="datetime-local"] {
 }
 
 .player-box .subdued {
-    font-size: 0.8em;
+    font-size: 1em;
     color: #ccc;
 }

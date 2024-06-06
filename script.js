@@ -13,6 +13,28 @@ const logoutButton = document.getElementById('logout-button');
 const adminSection = document.getElementById('admin-section');
 const gameForm = document.getElementById('game-form');
 
+const jogosPage = document.getElementById('jogos-page');
+const competicoesPage = document.getElementById('competicoes-page');
+const jogosLink = document.getElementById('jogos-link');
+const competicoesLink = document.getElementById('competicoes-link');
+
+function showPage(page) {
+    if (page === 'jogos') {
+        jogosPage.style.display = 'block';
+        competicoesPage.style.display = 'none';
+        jogosLink.classList.add('active');
+        competicoesLink.classList.remove('active');
+    } else if (page === 'competicoes') {
+        jogosPage.style.display = 'none';
+        competicoesPage.style.display = 'block';
+        jogosLink.classList.remove('active');
+        competicoesLink.classList.add('active');
+    }
+}
+
+jogosLink.addEventListener('click', () => showPage('jogos'));
+competicoesLink.addEventListener('click', () => showPage('competicoes'));
+
 showLoginFormButton.addEventListener('click', () => {
     loginForm.style.display = 'block';
 });
@@ -93,3 +115,4 @@ gameForm.addEventListener('submit', async (e) => {
 });
 
 fetchGameInfo();
+showPage('jogos');

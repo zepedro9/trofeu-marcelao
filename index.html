@@ -15,12 +15,12 @@
                 <img src="logo.png" alt="Logo">
             </div>
             <ul class="nav-links">
-                <li><a href="#"><i class="fas fa-futbol"></i> Jogos</a></li>
-                <li><a href="#"><i class="fas fa-trophy"></i> Competições</a></li>
+                <li><a href="#" id="jogos-link" class="active"><i class="fas fa-futbol"></i> Jogos</a></li>
+                <li><a href="#" id="competicoes-link"><i class="fas fa-trophy"></i> Competições</a></li>
             </ul>
         </div>
     </nav>
-    <div class="container">
+    <div class="container" id="jogos-page">
         <h1>Troféu Marcelão</h1>
         <div id="game-info" class="game-info">
             Loading...
@@ -35,17 +35,23 @@
                 <button type="submit">Submit Game</button>
             </form>
         </div>
-        <footer>
-            <button id="show-login-form">Admin Login</button>
-            <div id="login-form" class="auth-form">
-                <h2>Login</h2>
-                <input type="email" id="login-email" placeholder="Email" />
-                <input type="password" id="login-password" placeholder="Password" />
-                <button id="login-button">Login</button>
-            </div>
-            <button id="logout-button" style="display: none;">Logout</button>
-        </footer>
     </div>
+
+    <div class="container" id="competicoes-page" style="display: none;">
+        <h1>Competições</h1>
+        <!-- Add content for Competições page here -->
+    </div>
+
+    <footer>
+        <button id="show-login-form">Admin Login</button>
+        <div id="login-form" class="auth-form">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email" />
+            <input type="password" id="login-password" placeholder="Password" />
+            <button id="login-button">Login</button>
+        </div>
+        <button id="logout-button" style="display: none;">Logout</button>
+    </footer>
 
     <script type="module" src="firebaseConfig.js"></script>
     <script type="module" src="script.js"></script>

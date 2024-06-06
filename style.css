@@ -19,9 +19,8 @@ nav {
 }
 
 .logo img {
-    padding: 0;
-    width: 60px;
     margin: 0 0 0 20px;
+    width: 60px;
 }
 
 .nav-links {
@@ -33,9 +32,9 @@ nav {
 .nav-links a {
     padding: 25px;
     display: flex;
+    align-items: center;
     font-size: 22px;
     color: #FFD700;
-    align-items: center;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -67,14 +66,17 @@ h1 {
     margin-bottom: 20px;
 }
 
-.game-info {
+.game-info,
+.competition-info {
     gap: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.game-box {
+.game-box,
+.competition-box,
+.player-box {
     width: 100%;
     padding: 10px 20px;
     max-width: 300px;
@@ -83,23 +85,30 @@ h1 {
     border: 1px solid #FFD700;
 }
 
-.game-box p {
+.game-box p,
+.competition-box p,
+.player-box p {
     margin: 5px 0;
     line-height: 1.4;
 }
 
-.game-box .highlight {
+.game-box .highlight,
+.competition-box .highlight,
+.player-box .highlight {
     font-size: 1.5em;
     font-weight: bold;
     color: #fff;
 }
 
-.game-box .subdued {
+.game-box .subdued,
+.competition-box .subdued,
+.player-box .subdued {
     font-size: 1em;
     color: #ccc;
 }
 
-.auth-buttons, .auth-form {
+.auth-buttons,
+.auth-form {
     margin-bottom: 20px;
 }
 
@@ -123,9 +132,9 @@ button {
     color: #222;
     border: none;
     margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
     padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
     background-color: #FFD700;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -151,45 +160,14 @@ form input[type="datetime-local"] {
     width: calc(100% - 22px);
 }
 
-.competition-info {
-    gap: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.competition-box {
-    width: 100%;
-    padding: 10px 20px;
-    max-width: 300px;
-    border-radius: 5px;
-    background-color: #333;
-    border: 1px solid #FFD700;
-}
-
-.competition-box p {
-    margin: 5px 0;
-    line-height: 1.4;
-}
-
-.competition-box .highlight {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #fff;
-}
-
-.competition-box .subdued {
-    font-size: 1em;
-    color: #ccc;
-}
-
 .leaderboard {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-.leaderboard th, .leaderboard td {
+.leaderboard th,
+.leaderboard td {
     border: 1px solid #FFD700;
     padding: 10px;
     text-align: left;
@@ -207,31 +185,6 @@ form input[type="datetime-local"] {
 }
 
 .leaderboard td.subdued {
-    font-size: 1em;
-    color: #ccc;
-}
-
-.player-box {
-    width: 100%;
-    padding: 10px 20px;
-    max-width: 300px;
-    border-radius: 5px;
-    background-color: #333;
-    border: 1px solid #FFD700;
-}
-
-.player-box p {
-    margin: 8px 0;
-    line-height: 1.4;
-}
-
-.player-box .highlight {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #fff;
-}
-
-.player-box .subdued {
     font-size: 1em;
     color: #ccc;
 }

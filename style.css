@@ -1,3 +1,4 @@
+/* General styles */
 body {
     margin: 0;
     padding: 0;
@@ -6,6 +7,26 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    border-radius: 5px;
+    background-color: #333;
+    border: 1px solid #FFD700;
+    text-align: center;
+}
+
+.auth-form, .auth-buttons, .admin-section {
+    margin-bottom: 20px;
+}
+
+.auth-form {
+    display: none;
+    width: 300px;
+}
+
+/* Navigation styles */
 nav {
     display: flex;
     align-items: center;
@@ -19,7 +40,6 @@ nav {
 }
 
 .logo img {
-    padding: 0;
     width: 60px;
     margin: 0 0 0 20px;
 }
@@ -55,134 +75,51 @@ nav {
     padding-right: 20px;
 }
 
-.container {
-    padding: 20px;
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
-}
-
+/* Header styles */
 h1 {
     color: #FFD700;
     margin-bottom: 20px;
 }
 
-.game-info {
+/* Section styles */
+.game-info, .competition-info {
     gap: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.game-box {
-    width: 100%;
+/* Box styles */
+.game-box, .competition-box, .player-box {
     padding: 10px 20px;
+    width: 100%;
     max-width: 300px;
-    border-radius: 5px;
-    background-color: #333;
-    border: 1px solid #FFD700;
 }
 
-.game-box p {
-    margin: 5px 0;
-    line-height: 1.4;
-}
-
-.game-box .highlight {
+.game-box .highlight, .competition-box .highlight, .player-box .highlight {
     font-size: 1.5em;
     font-weight: bold;
-    color: #fff;
 }
 
-.game-box .subdued {
+.game-box .subdued, .competition-box .subdued, .player-box .subdued {
     font-size: 1em;
     color: #ccc;
 }
 
-.auth-buttons, .auth-form {
-    margin-bottom: 20px;
-}
-
-.auth-form {
-    display: none;
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    border: 1px solid #FFD700;
-    border-radius: 5px;
-    width: 300px;
-    margin: 20px auto;
-}
-
-footer {
-    margin-top: 20px;
-    text-align: center;
-}
-
-button {
-    color: #222;
-    border: none;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 10px 20px;
-    background-color: #FFD700;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-button:hover {
-    color: #222;
-    background-color: #FFCC00;
-}
-
-input {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    width: calc(100% - 22px);
-    border: 1px solid #ccc;
-}
-
-.admin-section {
-    margin-top: 20px;
-}
-
-form input[type="datetime-local"] {
-    width: calc(100% - 22px);
-}
-
-.competition-info {
-    gap: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.competition-box {
-    width: 100%;
-    padding: 10px 20px;
-    max-width: 300px;
-    border-radius: 5px;
-    background-color: #333;
-    border: 1px solid #FFD700;
-}
-
-.competition-box p {
+.game-box p, .competition-box p, .player-box p {
     margin: 5px 0;
     line-height: 1.4;
 }
 
-.competition-box .highlight {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #fff;
+.player-box p {
+    margin: 8px 0;
 }
 
-.competition-box .subdued {
-    font-size: 1em;
-    color: #ccc;
+.player-box .highlight {
+    font-size: 1.4em;
 }
 
+/* Leaderboard styles */
 .leaderboard {
     width: 100%;
     border-collapse: collapse;
@@ -203,35 +140,39 @@ form input[type="datetime-local"] {
 
 .leaderboard td.highlight {
     font-size: 1.2em;
-    color: #fff;
 }
 
-.leaderboard td.subdued {
-    font-size: 1em;
-    color: #ccc;
-}
-
-.player-box {
-    width: 100%;
-    padding: 10px 20px;
-    max-width: 300px;
+input, form input[type="datetime-local"] {
+    padding: 10px;
+    margin: 5px 0;
     border-radius: 5px;
-    background-color: #333;
-    border: 1px solid #FFD700;
+    width: calc(100% - 22px);
+    border: 1px solid #ccc;
 }
 
-.player-box p {
-    margin: 8px 0;
-    line-height: 1.4;
+/* Button styles */
+button {
+    color: #222;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: #FFD700;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.player-box .highlight {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #fff;
+button:hover {
+    color: #222;
+    background-color: #FFCC00;
 }
 
-.player-box .subdued {
-    font-size: 1em;
-    color: #ccc;
+/* Footer styles */
+footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.admin-section {
+    margin-top: 20px;
 }

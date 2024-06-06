@@ -6,206 +6,155 @@ document.addEventListener('DOMContentLoaded', () => {
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const gameInfoDiv = document.getElementById('game-info');
-    const loginForm = document.getElementById('login-form');
-    const adminLoginButton = document.getElementById('admin-login-button');
-    const loginButton = document.getElementById('login-button');
-    const logoutButton = document.getElementById('logout-button');
-    const adminSection = document.getElementById('admin-section');
-    const gameForm = document.getElementById('game-form');
-    const jogosPage = document.getElementById('jogos-page');
-    const competitionPage = document.getElementById('competition-page');
-    const classificacaoPage = document.getElementById('classificacao-page');
-    const jogosLink = document.getElementById('jogos-link');
-    const competitionLink = document.getElementById('competition-link');
-    const classificacaoLink = document.getElementById('classificacao-link');
-    const competitionInfoDiv = document.getElementById('competition-info');
-    const competitionForm = document.getElementById('competition-form');
-    const adminCompetitionSection = document.getElementById('admin-competition-section');
-    const leaderboardDiv = document.getElementById('leaderboard');
+    const elements = {
+        gameInfoDiv: document.getElementById('game-info'),
+        loginForm: document.getElementById('login-form'),
+        adminLoginButton: document.getElementById('admin-login-button'),
+        loginButton: document.getElementById('login-button'),
+        logoutButton: document.getElementById('logout-button'),
+        adminSection: document.getElementById('admin-section'),
+        gameForm: document.getElementById('game-form'),
+        jogosPage: document.getElementById('jogos-page'),
+        competitionPage: document.getElementById('competition-page'),
+        classificacaoPage: document.getElementById('classificacao-page'),
+        jogosLink: document.getElementById('jogos-link'),
+        competitionLink: document.getElementById('competition-link'),
+        classificacaoLink: document.getElementById('classificacao-link'),
+        competitionInfoDiv: document.getElementById('competition-info'),
+        competitionForm: document.getElementById('competition-form'),
+        adminCompetitionSection: document.getElementById('admin-competition-section'),
+        leaderboardDiv: document.getElementById('leaderboard'),
+    };
 
     function showPage(page) {
-        if (page === 'jogos') {
-            jogosPage.style.display = 'block';
-            competitionPage.style.display = 'none';
-            classificacaoPage.style.display = 'none';
-            jogosLink.classList.add('active');
-            competitionLink.classList.remove('active');
-            classificacaoLink.classList.remove('active');
-        } else if (page === 'competition') {
-            jogosPage.style.display = 'none';
-            competitionPage.style.display = 'block';
-            classificacaoPage.style.display = 'none';
-            jogosLink.classList.remove('active');
-            competitionLink.classList.add('active');
-            classificacaoLink.classList.remove('active');
-        } else if (page === 'classificacao') {
-            jogosPage.style.display = 'none';
-            competitionPage.style.display = 'none';
-            classificacaoPage.style.display = 'block';
-            jogosLink.classList.remove('active');
-            competitionLink.classList.remove('active');
-            classificacaoLink.classList.add('active');
+        const pages = ['jogos', 'competition', 'classificacao'];
+        pages.forEach(p => {
+            elements[`${p}Page`].style.display = p === page ? 'block' : 'none';
+            elements[`${p}Link`].classList.toggle('active', p === page);
+        });
+    }
+
+    function toggleLoginForm() {
+        elements.loginForm.style.display = elements.loginForm.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function handleAuthStateChanged(user) {
+        const display = user ? 'block' : 'none';
+        elements.adminSection.style.display = display;
+        elements.adminCompetitionSection.style.display = display;
+        elements.adminLoginButton.style.display = user ? 'none' : 'block';
+        elements.logoutButton.style.display = user ? 'block' : 'none';
+    }
+
+    async function fetchData(collectionName, renderFunction) {
+        try {
+            const snapshot = await getDocs(collection(db, collectionName));
+            const dataList = snapshot.docs.map(doc => doc.data());
+            renderFunction(dataList);
+        } catch (error) {
+            console.error(`Error fetching ${collectionName} information:`, error);
+            renderFunction([]);
         }
     }
 
-    jogosLink.addEventListener('click', () => showPage('jogos'));
-    competitionLink.addEventListener('click', () => showPage('competition'));
-    classificacaoLink.addEventListener('click', () => showPage('classificacao'));
+    function renderGames(games) {
+        elements.gameInfoDiv.innerHTML = games.map(game => `
+            <div class="game-box">
+                <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
+                <p class="subdued">${game.Competicao}</p>
+                <p class="subdued">${game.Data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
+                <p class="subdued">${game.Data.toDate().toLocaleDateString('en-GB')}</p>
+                ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
+                ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
+            </div>
+        `).join('') || "Error loading game information.";
+    }
 
-    adminLoginButton.addEventListener('click', () => {
-        if (loginForm.style.display === 'none' || loginForm.style.display === '') {
-            loginForm.style.display = 'block';
-        } else {
-            loginForm.style.display = 'none';
+    function renderCompetitions(competitions) {
+        elements.competitionInfoDiv.innerHTML = competitions.map(comp => `
+            <div class="competition-box">
+                <p class="highlight">${comp.Nome}</p>
+                <p class="subdued">Limite: ${comp.Limite.toDate().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</p>
+                ${comp.Vencedor ? `<p class="highlight">Vencedor: ${comp.Vencedor}</p>` : ''}
+            </div>
+        `).join('') || "Error loading competition information.";
+    }
+
+    function renderLeaderboard(players) {
+        players.sort((a, b) => b.Pontos - a.Pontos);
+        elements.leaderboardDiv.querySelector('tbody').innerHTML = players.map(player => `
+            <tr>
+                <td class="highlight">${player.Nome}</td>
+                <td class="subdued">${player.Pontos}</td>
+                <td class="subdued">${player.Ganhos} €</td>
+            </tr>
+        `).join('') || "<tr><td colspan='3'>Error loading leaderboard information.</td></tr>";
+    }
+
+    async function addDocument(collectionName, data, fetchFunction) {
+        try {
+            await addDoc(collection(db, collectionName), data);
+            fetchFunction();
+        } catch (error) {
+            console.error(`Error adding document to ${collectionName}:`, error);
         }
-    });
+    }
 
-    loginButton.addEventListener('click', () => {
+    function handleGameFormSubmit(e) {
+        e.preventDefault();
+        const data = {
+            Casa: document.getElementById('casa').value,
+            Fora: document.getElementById('fora').value,
+            Data: new Date(document.getElementById('data').value),
+            Competicao: document.getElementById('competicao').value,
+            Resultado: document.getElementById('resultado').value,
+            Vencedor: document.getElementById('vencedor').value,
+        };
+        addDocument("jogos", data, () => fetchData("jogos", renderGames));
+        elements.gameForm.reset();
+    }
+
+    function handleCompetitionFormSubmit(e) {
+        e.preventDefault();
+        const data = {
+            Nome: document.getElementById('nome').value,
+            Limite: new Date(document.getElementById('limite').value),
+            Vencedor: document.getElementById('vencedor-competicao').value,
+        };
+        addDocument("competicoes", data, () => fetchData("competicoes", renderCompetitions));
+        elements.competitionForm.reset();
+    }
+
+    elements.jogosLink.addEventListener('click', () => showPage('jogos'));
+    elements.competitionLink.addEventListener('click', () => showPage('competition'));
+    elements.classificacaoLink.addEventListener('click', () => showPage('classificacao'));
+
+    elements.adminLoginButton.addEventListener('click', toggleLoginForm);
+
+    elements.loginButton.addEventListener('click', () => {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                console.log("User signed in: ", userCredential.user);
-                loginForm.style.display = 'none';
-                adminLoginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
-            })
-            .catch((error) => {
-                console.error("Error signing in: ", error);
-            });
-    });
-
-    logoutButton.addEventListener('click', () => {
-        signOut(auth)
             .then(() => {
-                console.log("User signed out");
-                adminLoginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
+                elements.loginForm.style.display = 'none';
             })
-            .catch((error) => {
-                console.error("Error signing out: ", error);
-            });
+            .catch(error => console.error("Error signing in: ", error));
     });
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            adminSection.style.display = 'block';
-            adminCompetitionSection.style.display = 'block';
-            adminLoginButton.style.display = 'none';
-            logoutButton.style.display = 'block';
-        } else {
-            adminSection.style.display = 'none';
-            adminCompetitionSection.style.display = 'none';
-            adminLoginButton.style.display = 'block';
-            logoutButton.style.display = 'none';
-        }
+    elements.logoutButton.addEventListener('click', () => {
+        signOut(auth)
+            .then(() => console.log("User signed out"))
+            .catch(error => console.error("Error signing out: ", error));
     });
 
-    async function fetchGameInfo() {
-        try {
-            const jogosCol = collection(db, "jogos");
-            const jogosSnapshot = await getDocs(jogosCol);
-            const jogosList = jogosSnapshot.docs.map(doc => doc.data());
-            gameInfoDiv.innerHTML = jogosList.map(game => `
-                <div class="game-box">
-                    <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
-                    <p class="subdued">${game.Competicao}</p>
-                    <p class="subdued">${game.Data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
-                    <p class="subdued">${game.Data.toDate().toLocaleDateString('en-GB')}</p>
-                    ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
-                    ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error("Error fetching game information:", error);
-            gameInfoDiv.innerHTML = "Error loading game information.";
-        }
-    }
+    onAuthStateChanged(auth, handleAuthStateChanged);
 
-    async function fetchCompetitionInfo() {
-        try {
-            const competitionsCol = collection(db, "competicoes");
-            const competitionsSnapshot = await getDocs(competitionsCol);
-            const competitionsList = competitionsSnapshot.docs.map(doc => doc.data());
-            competitionInfoDiv.innerHTML = competitionsList.map(comp => `
-                <div class="competition-box">
-                    <p class="highlight">${comp.Nome}</p>
-                    <p class="subdued">Limite: ${comp.Limite.toDate().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</p>
-                    ${comp.Vencedor ? `<p class="highlight">Vencedor: ${comp.Vencedor}</p>` : ''}
-                </div>
-            `).join('');
-        } catch (error) {
-            console.error("Error fetching competition information:", error);
-            competitionInfoDiv.innerHTML = "Error loading competition information.";
-        }
-    }
+    elements.gameForm.addEventListener('submit', handleGameFormSubmit);
+    elements.competitionForm.addEventListener('submit', handleCompetitionFormSubmit);
 
-    async function fetchLeaderboard() {
-        try {
-            const jogadoresCol = collection(db, "jogadores");
-            const jogadoresSnapshot = await getDocs(jogadoresCol);
-            const jogadoresList = jogadoresSnapshot.docs.map(doc => doc.data());
-            jogadoresList.sort((a, b) => b.Pontos - a.Pontos); // Sort players by points in descending order
-            leaderboardDiv.querySelector('tbody').innerHTML = jogadoresList.map(player => `
-                <tr>
-                    <td class="highlight">${player.Nome}</td>
-                    <td class="subdued">${player.Pontos}</td>
-                    <td class="subdued">€${player.Ganhos.toFixed(2)}</td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            console.error("Error fetching leaderboard information:", error);
-            leaderboardDiv.querySelector('tbody').innerHTML = "<tr><td colspan='3'>Error loading leaderboard information.</td></tr>";
-        }
-    }    
+    fetchData("jogos", renderGames);
+    fetchData("competicoes", renderCompetitions);
+    fetchData("jogadores", renderLeaderboard);
 
-    gameForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const casa = document.getElementById('casa').value;
-        const fora = document.getElementById('fora').value;
-        const data = document.getElementById('data').value;
-        const competicao = document.getElementById('competicao').value;
-        const resultado = document.getElementById('resultado').value;
-        const vencedor = document.getElementById('vencedor').value;
-
-        try {
-            await addDoc(collection(db, "jogos"), {
-                Casa: casa,
-                Fora: fora,
-                Data: new Date(data),
-                Competicao: competicao,
-                Resultado: resultado,
-                Vencedor: vencedor
-            });
-            fetchGameInfo();
-            gameForm.reset();
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    });
-
-    competitionForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const nome = document.getElementById('nome').value;
-        const limite = document.getElementById('limite').value;
-        const vencedorCompeticao = document.getElementById('vencedor-competicao').value;
-    
-        try {
-            await addDoc(collection(db, "competitions"), {
-                Nome: nome,
-                Limite: new Date(limite),
-                Vencedor: vencedorCompeticao
-            });
-            fetchCompetitionInfo();
-            competitionForm.reset();
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    });
-
-    fetchGameInfo();
-    fetchCompetitionInfo();
-    fetchLeaderboard();
     showPage('jogos');
 });

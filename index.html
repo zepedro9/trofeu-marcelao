@@ -24,12 +24,12 @@
             <button id="admin-login-button">Admin Login</button>
         </div>
     </nav>
-    <div id="login-form" class="auth-form">
+    <div id="login-form" class="auth-form" style="display: none;">
         <h2>Login</h2>
         <input type="email" id="login-email" placeholder="Email" />
         <input type="password" id="login-password" placeholder="Password" />
         <button id="login-button">Login</button>
-    </div>
+    </div>    
     
     <div class="container" id="jogos-page">
         <h1>Jogos</h1>
@@ -58,18 +58,7 @@
     <div class="container" id="classificacao-page" style="display: none;">
         <h1>Classificação</h1>
         <!-- Add content for Classificação page here -->
-    </div>    
-
-    <footer>
-        <button id="show-login-form">Admin Login</button>
-        <div id="login-form" class="auth-form">
-            <h2>Login</h2>
-            <input type="email" id="login-email" placeholder="Email" />
-            <input type="password" id="login-password" placeholder="Password" />
-            <button id="login-button">Login</button>
-        </div>
-        <button id="logout-button" style="display: none;">Logout</button>
-    </footer>
+    </div>
 
     <script type="module" src="firebaseConfig.js"></script>
     <script type="module" src="script.js"></script>

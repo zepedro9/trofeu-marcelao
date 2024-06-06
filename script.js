@@ -50,7 +50,11 @@ competicoesLink.addEventListener('click', () => showPage('competicoes'));
 classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
 adminLoginButton.addEventListener('click', () => {
-    loginForm.style.display = 'block';
+    if (loginForm.style.display === 'none' || loginForm.style.display === '') {
+        loginForm.style.display = 'block';
+    } else {
+        loginForm.style.display = 'none';
+    }
 });
 
 loginButton.addEventListener('click', () => {
@@ -96,12 +100,13 @@ async function fetchGameInfo() {
         gameInfoDiv.innerHTML = jogosList.map(game => `
             <div class="game-box">
                 <p class="highlight">${game.casa} Vs ${game.fora}</p>
-                <p>${game.competicao}</p>
-                <p>${game.data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} - ${game.data.toDate().toLocaleDateString('en-GB')}</p>
+                <p class="subdued">${game.competicao}</p>
+                <p class="subdued">${game.data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} - ${game.data.toDate().toLocaleDateString('en-GB')}</p>
                 ${game.resultado ? `<p class="highlight">Resultado: ${game.resultado}</p>` : ''}
                 ${game.vencedor ? `<p class="highlight">Vencedor: ${game.vencedor}</p>` : ''}
             </div>
         `).join('');
+
     } catch (error) {
         console.error("Error fetching game information:", error);
         gameInfoDiv.innerHTML = "Error loading game information.";

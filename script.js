@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const competitionInfoDiv = document.getElementById('competition-info');
     const competitionForm = document.getElementById('competition-form');
     const adminCompetitionSection = document.getElementById('admin-competition-section');
+    const leaderboardDiv = document.getElementById('leaderboard');
 
     function showPage(page) {
         if (page === 'jogos') {
@@ -140,6 +141,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchLeaderboard() {
+        try {
+            const jogadoresCol = collection(db, "jogadores");
+            const jogadoresSnapshot = await getDocs(jogadoresCol);
+            const jogadoresList = jogadoresSnapshot.docs.map(doc => doc.data());
+            jogadoresList.sort((a, b) => b.Pontos - a.Pontos); // Sort players by points in descending order
+            leaderboardDiv.innerHTML = jogadoresList.map(player => `
+                <div class="player-box">
+                    <p class="highlight">${player.Nome}</p>
+                    <p class="subdued">Pontos: ${player.Pontos}</p>
+                    <p class="subdued">Ganhos: ${player.Ganhos.toFixed(2)} €</p>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error("Error fetching leaderboard information:", error);
+            leaderboardDiv.innerHTML = "Error loading leaderboard information.";
+        }
+    }
+
     gameForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const casa = document.getElementById('casa').value;
@@ -186,5 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchGameInfo();
     fetchCompetitionInfo();
+    fetchLeaderboard();
     showPage('jogos');
 });

@@ -182,3 +182,35 @@ form input[type="datetime-local"] {
     font-size: 0.8em;
     color: #ccc;
 }
+
+.leaderboard {
+    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.player-box {
+    width: 100%;
+    padding: 10px 20px;
+    max-width: 300px;
+    border-radius: 5px;
+    background-color: #333;
+    border: 1px solid #FFD700;
+}
+
+.player-box p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.player-box .highlight {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.player-box .subdued {
+    font-size: 0.8em;
+    color: #ccc;
+}

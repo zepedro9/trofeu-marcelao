@@ -150,3 +150,35 @@ input {
 form input[type="datetime-local"] {
     width: calc(100% - 22px);
 }
+
+.competition-info {
+    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.competition-box {
+    width: 100%;
+    padding: 10px 20px;
+    max-width: 300px;
+    border-radius: 5px;
+    background-color: #333;
+    border: 1px solid #FFD700;
+}
+
+.competition-box p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.competition-box .highlight {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.competition-box .subdued {
+    font-size: 0.8em;
+    color: #ccc;
+}

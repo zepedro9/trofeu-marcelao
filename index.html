@@ -53,8 +53,19 @@
     
     <div class="container" id="competicoes-page" style="display: none;">
         <h1>Competições</h1>
-        <!-- Add content for Competições page here -->
-    </div>
+        <div id="competicoes-info" class="competicoes-info">
+            Loading...
+        </div>
+        <div id="admin-competicoes-section" class="admin-section" style="display: none;">
+            <h2>Add New Competition</h2>
+            <form id="competicoes-form">
+                <input type="text" id="nome" placeholder="Nome" required />
+                <input type="datetime-local" id="limite" placeholder="Limite" required />
+                <input type="text" id="vencedor-competicao" placeholder="Vencedor" />
+                <button type="submit">Submit Competition</button>
+            </form>
+        </div>
+    </div>    
     
     <div class="container" id="classificacao-page" style="display: none;">
         <h1>Classificação</h1>

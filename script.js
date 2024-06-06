@@ -6,11 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const loginButton = document.getElementById('login-button');
-    const adminLoginButton = document.getElementById('admin-login-button');
-    const logoutButton = document.getElementById('logout-button');
     const gameInfoDiv = document.getElementById('game-info');
     const loginForm = document.getElementById('login-form');
+    const adminLoginButton = document.getElementById('admin-login-button');
+    const loginButton = document.getElementById('login-button');
     const adminSection = document.getElementById('admin-section');
     const gameForm = document.getElementById('game-form');
     const jogosPage = document.getElementById('jogos-page');
@@ -19,6 +18,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const jogosLink = document.getElementById('jogos-link');
     const competicoesLink = document.getElementById('competicoes-link');
     const classificacaoLink = document.getElementById('classificacao-link');
+    const competitionInfoDiv = document.getElementById('competition-info');
+    const competitionForm = document.getElementById('competition-form');
+    const adminCompetitionSection = document.getElementById('admin-competition-section');
+
+    function showPage(page) {
+        if (page === 'jogos') {
+            jogosPage.style.display = 'block';
+            competicoesPage.style.display = 'none';
+            classificacaoPage.style.display = 'none';
+            jogosLink.classList.add('active');
+            competicoesLink.classList.remove('active');
+            classificacaoLink.classList.remove('active');
+        } else if (page === 'competicoes') {
+            jogosPage.style.display = 'none';
+            competicoesPage.style.display = 'block';
+            classificacaoPage.style.display = 'none';
+            jogosLink.classList.remove('active');
+            competicoesLink.classList.add('active');
+            classificacaoLink.classList.remove('active');
+        } else if (page === 'classificacao') {
+            jogosPage.style.display = 'none';
+            competicoesPage.style.display = 'none';
+            classificacaoPage.style.display = 'block';
+            jogosLink.classList.remove('active');
+            competicoesLink.classList.remove('active');
+            classificacaoLink.classList.add('active');
+        }
+    }
+
+    jogosLink.addEventListener('click', () => showPage('jogos'));
+    competicoesLink.addEventListener('click', () => showPage('competicoes'));
+    classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
     adminLoginButton.addEventListener('click', () => {
         if (loginForm.style.display === 'none' || loginForm.style.display === '') {
@@ -58,10 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             adminSection.style.display = 'block';
+            adminCompetitionSection.style.display = 'block';
             adminLoginButton.style.display = 'none';
             logoutButton.style.display = 'block';
         } else {
             adminSection.style.display = 'none';
+            adminCompetitionSection.style.display = 'none';
             adminLoginButton.style.display = 'block';
             logoutButton.style.display = 'none';
         }
@@ -85,6 +118,24 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Error fetching game information:", error);
             gameInfoDiv.innerHTML = "Error loading game information.";
+        }
+    }
+
+    async function fetchCompetitionInfo() {
+        try {
+            const competitionsCol = collection(db, "competitions");
+            const competitionsSnapshot = await getDocs(competitionsCol);
+            const competitionsList = competitionsSnapshot.docs.map(doc => doc.data());
+            competitionInfoDiv.innerHTML = competitionsList.map(comp => `
+                <div class="competition-box">
+                    <p class="highlight">${comp.Nome}</p>
+                    <p class="subdued">Limite: ${comp.Limite.toDate().toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' })}</p>
+                    ${comp.Vencedor ? `<p class="highlight">Vencedor: ${comp.Vencedor}</p>` : ''}
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error("Error fetching competition information:", error);
+            competitionInfoDiv.innerHTML = "Error loading competition information.";
         }
     }
 
@@ -113,6 +164,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    competitionForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nome').value;
+        const limite = document.getElementById('limite').value;
+        const vencedorCompeticao = document.getElementById('vencedor-competicao').value;
+    
+        try {
+            await addDoc(collection(db, "competitions"), {
+                Nome: nome,
+                Limite: new Date(limite),
+                Vencedor: vencedorCompeticao
+            });
+            fetchCompetitionInfo();
+            competitionForm.reset();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+        }
+    });
+
     fetchGameInfo();
+    fetchCompetitionInfo();
     showPage('jogos');
 });

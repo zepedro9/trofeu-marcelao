@@ -7,7 +7,7 @@ const auth = getAuth(app);
 
 const gameInfoDiv = document.getElementById('game-info');
 const loginForm = document.getElementById('login-form');
-const showLoginFormButton = document.getElementById('show-login-form');
+const adminLoginButton = document.getElementById('admin-login-button');
 const loginButton = document.getElementById('login-button');
 const logoutButton = document.getElementById('logout-button');
 const adminSection = document.getElementById('admin-section');
@@ -49,7 +49,7 @@ jogosLink.addEventListener('click', () => showPage('jogos'));
 competicoesLink.addEventListener('click', () => showPage('competicoes'));
 classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
-showLoginFormButton.addEventListener('click', () => {
+adminLoginButton.addEventListener('click', () => {
     loginForm.style.display = 'block';
 });
 
@@ -95,11 +95,11 @@ async function fetchGameInfo() {
         const jogosList = jogosSnapshot.docs.map(doc => doc.data());
         gameInfoDiv.innerHTML = jogosList.map(game => `
             <div class="game-box">
-                <p><strong>${game.casa} Vs ${game.fora}</strong></p>
+                <p class="highlight">${game.casa} Vs ${game.fora}</p>
                 <p>${game.competicao}</p>
                 <p>${game.data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} - ${game.data.toDate().toLocaleDateString('en-GB')}</p>
-                ${game.resultado ? `<p><strong>Resultado:</strong> ${game.resultado}</p>` : ''}
-                ${game.vencedor ? `<p><strong>Vencedor:</strong> ${game.vencedor}</p>` : ''}
+                ${game.resultado ? `<p class="highlight">Resultado: ${game.resultado}</p>` : ''}
+                ${game.vencedor ? `<p class="highlight">Vencedor: ${game.vencedor}</p>` : ''}
             </div>
         `).join('');
     } catch (error) {

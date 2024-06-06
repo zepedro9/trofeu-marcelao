@@ -50,6 +50,11 @@ nav {
     margin-right: 8px;
 }
 
+.nav-right {
+    margin-left: auto;
+    padding-right: 20px;
+}
+
 .container {
     padding: 20px;
     max-width: 600px;
@@ -78,12 +83,28 @@ h1 {
     border: 1px solid #FFD700;
 }
 
+.game-box p {
+    margin: 5px 0;
+}
+
+.game-box .highlight {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
 .auth-buttons, .auth-form {
     margin-bottom: 20px;
 }
 
 .auth-form {
     display: none;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    border: 1px solid #FFD700;
+    border-radius: 5px;
+    width: 300px;
+    margin: 20px auto;
 }
 
 footer {

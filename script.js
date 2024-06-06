@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const adminLoginButton = document.getElementById('admin-login-button');
     const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
     const adminSection = document.getElementById('admin-section');
     const gameForm = document.getElementById('game-form');
     const jogosPage = document.getElementById('jogos-page');

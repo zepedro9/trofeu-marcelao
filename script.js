@@ -74,11 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const jogosList = jogosSnapshot.docs.map(doc => doc.data());
             gameInfoDiv.innerHTML = jogosList.map(game => `
                 <div class="game-box">
-                    <p class="highlight">${game.casa} Vs ${game.fora}</p>
-                    <p class="subdued">${game.competicao}</p>
-                    <p class="subdued">${game.data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} - ${game.data.toDate().toLocaleDateString('en-GB')}</p>
-                    ${game.resultado ? `<p class="highlight">Resultado: ${game.resultado}</p>` : ''}
-                    ${game.vencedor ? `<p class="highlight">Vencedor: ${game.vencedor}</p>` : ''}
+                    <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
+                    <p class="subdued">${game.Competicao}</p>
+                    <p class="subdued">${game.Data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p class="subdued">${game.Data.toDate().toLocaleDateString('en-GB')}</p>
+                    ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
+                    ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
                 </div>
             `).join('');
         } catch (error) {
@@ -98,12 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             await addDoc(collection(db, "jogos"), {
-                casa: casa,
-                fora: fora,
-                data: new Date(data),
-                competicao: competicao,
-                resultado: resultado,
-                vencedor: vencedor
+                Casa: casa,
+                Fora: fora,
+                Data: new Date(data),
+                Competicao: competicao,
+                Resultado: resultado,
+                Vencedor: vencedor
             });
             fetchGameInfo();
             gameForm.reset();

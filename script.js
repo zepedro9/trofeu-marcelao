@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper function to hash passwords
-    async function hashPassword(password) {
+    function hashPassword(password) {
         const msgUint8 = new TextEncoder().encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+        const hashBuffer = crypto.subtle.digest('SHA-256', msgUint8);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
@@ -162,8 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         games.map(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-            console.log(document.getElementById(`${game.id}-prediction-form`))
-            if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+            if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', function(event) {
                 console.log("Got here")
                 event.preventDefault();
                 const formData = new FormData(event.target);
@@ -173,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const password = formData.get(`${game.id}-password`);
                 
                 const userDoc = users.find(user => user.Nome === username);
-                const hashedPassword = await hashPassword(password);
+                const hashedPassword = hashPassword(password);
 
                 if (userDoc && userDoc.Password === hashedPassword) {
                     alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);

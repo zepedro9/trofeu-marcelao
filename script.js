@@ -39,6 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Helper function to hash passwords
+    async function hashPassword(password) {
+        const msgUint8 = new TextEncoder().encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     function showPage(page) {
         const pages = ['jogos', 'competition', 'classificacao'];
         pages.forEach(p => {
@@ -59,6 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.logoutButton.style.display = user ? 'block' : 'none';
     }
 
+    // Function to fetch users from Firestore
+    async function fetchUsers() {
+        const snapshot = await db.collection('jogadores').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
+
     async function fetchData(collectionName, renderFunction) {
         try {
             const snapshot = await getDocs(collection(db, collectionName));
@@ -70,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderGames(games) {
+    async function renderGames(games) {
         // Get the current date and time in the Portuguese time zone
         const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
     
@@ -91,23 +105,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
-
-        // Add event listeners for toggling visibility
+    
+        // Add event listeners for toggling visibility and displaying form
         document.querySelectorAll('.game-box').forEach(box => {
-            box.addEventListener('click', function() {
-                if (this.classList.contains('expanded')) {
-                    // Remove expanded class to show all games
-                    document.querySelectorAll('.game-box').forEach(box => {
-                        box.classList.remove('hidden');
-                    });
-                    this.classList.remove('expanded');
-                } else {
-                    // Hide all other games and expand the clicked one
-                    document.querySelectorAll('.game-box').forEach(box => {
-                        box.classList.add('hidden');
-                    });
-                    this.classList.remove('hidden');
+            box.addEventListener('click', async function() {
+                const isExpanded = this.classList.contains('expanded');
+                document.querySelectorAll('.game-box').forEach(box => {
+                    box.classList.remove('hidden');
+                    box.classList.remove('expanded');
+                });
+    
+                if (!isExpanded) {
                     this.classList.add('expanded');
+    
+                    const users = await fetchUsers();
+                    const formHTML = `
+                        <form id="prediction-form">
+                            <div>
+                                ${users.map(user => `
+                                    <div>
+                                        <input type="radio" id="${user.id}" name="username" value="${user.Nome}" required>
+                                        <label for="${user.id}">${user.Nome}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div>
+                                <label for="casa">Casa:</label>
+                                <input type="number" id="casa" name="casa" required>
+                            </div>
+                            <div>
+                                <label for="fora">Fora:</label>
+                                <input type="number" id="fora" name="fora" required>
+                            </div>
+                            <div>
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" required>
+                            </div>
+                            <button type="submit">Submit Prediction</button>
+                        </form>
+                    `;
+                    this.insertAdjacentHTML('afterend', formHTML);
+    
+                    document.getElementById('prediction-form').addEventListener('submit', async function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(event.target);
+                        const username = formData.get('username');
+                        const casa = formData.get('casa');
+                        const fora = formData.get('fora');
+                        const password = formData.get('password');
+                        
+                        const userDoc = users.find(user => user.Nome === username);
+                        const hashedPassword = await hashPassword(password);
+    
+                        if (userDoc && userDoc.Password === hashedPassword) {
+                            alert(`Prediction submitted: Casa ${casa} - Fora ${fora}`);
+                        } else {
+                            alert('Incorrect password.');
+                        }
+                    });
                 }
             });
         });

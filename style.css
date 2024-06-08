@@ -275,7 +275,7 @@ form input[type="datetime-local"] {
 }
 
 .past-game {
-    opacity: 0.5;
+    opacity: 0.4;
     background-color: #111;
 }
 
@@ -286,4 +286,77 @@ form input[type="datetime-local"] {
 .expanded {
     display: block;
     border: 1px solid #FFD700;
+}
+
+/* Additional CSS for the new form and its elements */
+
+.expanded + form {
+    margin-top: 20px;
+    background-color: #333;
+    padding: 20px;
+    border: 1px solid #FFD700;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+form input[type="radio"] {
+    margin-right: 10px;
+}
+
+form input[type="number"],
+form input[type="password"] {
+    width: calc(100% - 22px); /* Adjust width to fit within the form */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #222;
+    color: #fff;
+}
+
+form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #FFD700;
+    color: #222;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #FFCC00;
+}
+
+/* Adjusting form elements for mobile */
+@media (max-width: 480px) {
+    form {
+        padding: 10px;
+    }
+
+    form label {
+        margin: 8px 0 4px;
+    }
+
+    form input[type="number"],
+    form input[type="password"] {
+        padding: 8px;
+    }
+
+    form button[type="submit"] {
+        padding: 8px;
+    }
 }

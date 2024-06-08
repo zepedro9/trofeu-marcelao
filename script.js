@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginButton: document.getElementById('login-button'),
         logoutButton: document.getElementById('logout-button'),
         adminSection: document.getElementById('admin-section'),
-        gameForm: document.getElementById('game-form'),
+        gameForm: document.getElementById('create-game-form'),
         jogosPage: document.getElementById('jogos-page'),
         competitionPage: document.getElementById('competition-page'),
         classificacaoPage: document.getElementById('classificacao-page'),
@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         games.map(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
+            console.log(document.getElementById(`${game.id}-prediction-form`))
             if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
                 console.log("Got here")
                 event.preventDefault();
@@ -213,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function handleGameFormSubmit(e) {
+    function handleCreateGameFormSubmit(e) {
         e.preventDefault();
         const data = {
             Casa: document.getElementById('casa').value,
@@ -262,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     onAuthStateChanged(auth, handleAuthStateChanged);
 
-    elements.gameForm.addEventListener('submit', handleGameFormSubmit);
+    elements.gameForm.addEventListener('submit', handleCreateGameFormSubmit);
     elements.competitionForm.addEventListener('submit', handleCompetitionFormSubmit);
 
     fetchData("jogos", renderGames);

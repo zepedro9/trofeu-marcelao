@@ -109,22 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div>
                             ${users.map(user => `
                                 <div>
-                                    <input type="radio" id="${user.id}" name="username" value="${user.Nome}" required>
-                                    <label for="${user.id}">${user.Nome}</label>
+                                    <input type="radio" id="${game.id}-${user.id}" name="username" value="${user.Nome}" required>
+                                    <label for="${game.id}-${user.id}">${user.Nome}</label>
                                 </div>
                             `).join('')}
                         </div>
                         <div>
-                            <label for="casa">${game.Casa}:</label>
-                            <input type="number" id="casa" name="casa" required>
+                            <label for="${game.id}-casa">${game.Casa}:</label>
+                            <input type="number" id="${game.id}-casa" name="casa" required>
                         </div>
                         <div>
-                            <label for="fora">${game.Casa}:</label>
-                            <input type="number" id="fora" name="fora" required>
+                            <label for="${game.id}-fora">${game.Casa}:</label>
+                            <input type="number" id="${game.id}-fora" name="fora" required>
                         </div>
                         <div>
-                            <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" required>
+                            <label for="${game.id}-password">Password:</label>
+                            <input type="password" id="${game.id}-password" name="password" required>
                         </div>
                         <button type="submit">Submit Prediction</button>
                     </form>
@@ -152,22 +152,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const username = formData.get('username');
-            const casa = formData.get('casa');
-            const fora = formData.get('fora');
-            const password = formData.get('password');
-            
-            const userDoc = users.find(user => user.Nome === username);
-            const hashedPassword = await hashPassword(password);
+        games.map(game => {
+            document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                const username = formData.get(`${game.id}-username`);
+                const casa = formData.get(`${game.id}-casa`);
+                const fora = formData.get(`${game.id}-fora`);
+                const password = formData.get(`${game.id}-password`);
+                
+                const userDoc = users.find(user => user.Nome === username);
+                const hashedPassword = await hashPassword(password);
 
-            if (userDoc && userDoc.Password === hashedPassword) {
-                alert(`Prediction submitted: Casa ${casa} - Fora ${fora}`);
-            } else {
-                alert('Incorrect password.');
-            }
+                if (userDoc && userDoc.Password === hashedPassword) {
+                    alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
+                } else {
+                    alert('Incorrect password.');
+                }
+            });
         });
     }
 

@@ -287,3 +287,17 @@ form input[type="datetime-local"] {
     display: block;
     border: 1px solid #FFD700;
 }
+
+.prediction-form {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.prediction-form .highlight {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.prediction-form .user-selector {
+    padding: 10px;
+}

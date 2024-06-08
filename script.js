@@ -104,11 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-                    <br><br>
-                    <form id="${game.id}-prediction-form" class="prediction-form hidden">
+                    ${!isPastGame ? <form id="${game.id}-prediction-form" class="prediction-form hidden">
+                        <p class="highlight">Submeter previsão:</p>
+                        <p>Seleciona quem és:</p>
                         <div>
                             ${users.map(user => `
-                                <div>
+                                <div class="user-selector">
                                     <input type="radio" id="${game.id}-${user.id}" name="username" value="${user.Nome}" required>
                                     <label for="${game.id}-${user.id}">${user.Nome}</label>
                                 </div>
@@ -116,18 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div>
                             <label for="${game.id}-casa">${game.Casa}:</label>
-                            <input type="number" id="${game.id}-casa" name="casa" required>
+                            <input type="number" id="${game.id}-casa" name="casa" required/>
                         </div>
                         <div>
-                            <label for="${game.id}-fora">${game.Casa}:</label>
-                            <input type="number" id="${game.id}-fora" name="fora" required>
+                            <label for="${game.id}-fora">${game.Fora}:</label>
+                            <input type="number" id="${game.id}-fora" name="fora" required/>
                         </div>
                         <div>
                             <label for="${game.id}-password">Password:</label>
-                            <input type="password" id="${game.id}-password" name="password" required>
+                            <input type="password" id="${game.id}-password" name="password" required/>
                         </div>
                         <button type="submit">Submit Prediction</button>
-                    </form>
+                    </form> : ''}
                 </div>
             `;
         }).join('') || "Error loading game information.";
@@ -139,15 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Remove expanded class to show all games
                     document.querySelectorAll('.game-box').forEach(box => {
                         box.classList.remove('hidden');
+                        box.querySelector('.prediction-form').classList.add('hidden');
                     });
                     this.classList.remove('expanded');
                 } else {
                     // Hide all other games and expand the clicked one
                     document.querySelectorAll('.game-box').forEach(box => {
                         box.classList.add('hidden');
+                        box.querySelector('.prediction-form').classList.add('hidden');
                     });
                     this.classList.remove('hidden');
                     this.classList.add('expanded');
+                    this.querySelector('.prediction-form').classList.remove('hidden');
                 }
             });
         });

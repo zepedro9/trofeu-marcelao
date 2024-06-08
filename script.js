@@ -85,16 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isPastGame(game) {
+        // Get the current date and time in the Portuguese time zone
+        const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
         const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
         return gameDateTime < currentDateTime;
     }
 
     async function renderGames(games) {
         const users = await fetchUsers();
-
-        // Get the current date and time in the Portuguese time zone
-        const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-    
+        
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     

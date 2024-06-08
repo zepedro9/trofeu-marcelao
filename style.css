@@ -217,6 +217,7 @@ button {
     color: #222;
     border: none;
     margin: 5px;
+    width: 100%;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;

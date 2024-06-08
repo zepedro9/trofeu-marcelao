@@ -59,15 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderGames(games) {
         // Get the current date and time in the Portuguese time zone
-        const currentDateTime = new Date().toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' });
-        const currentDate = new Date(currentDateTime);
+        const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
     
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     
         elements.gameInfoDiv.innerHTML = games.map(game => {
-            const gameDateTime = game.Data.toDate();
-            const isPastGame = gameDateTime < currentDate;
+            const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
+            const isPastGame = gameDateTime < currentDateTime;
             return `
                 <div class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>

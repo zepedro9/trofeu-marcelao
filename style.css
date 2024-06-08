@@ -278,3 +278,11 @@ form input[type="datetime-local"] {
     opacity: 0.5;
     background-color: #111;
 }
+
+.hidden {
+    display: none;
+}
+
+.expanded {
+    display: block;
+}

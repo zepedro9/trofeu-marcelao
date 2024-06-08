@@ -91,7 +91,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
-    }    
+
+        // Add event listeners for toggling visibility
+        document.querySelectorAll('.game-box').forEach(box => {
+            box.addEventListener('click', function() {
+                if (this.classList.contains('expanded')) {
+                    // Remove expanded class to show all games
+                    document.querySelectorAll('.game-box').forEach(box => {
+                        box.classList.remove('hidden');
+                    });
+                    this.classList.remove('expanded');
+                } else {
+                    // Hide all other games and expand the clicked one
+                    document.querySelectorAll('.game-box').forEach(box => {
+                        box.classList.add('hidden');
+                    });
+                    this.classList.remove('hidden');
+                    this.classList.add('expanded');
+                }
+            });
+        });
+    }
 
     function renderCompetitions(competitions) {
         elements.competitionInfoDiv.innerHTML = competitions.map(comp => `

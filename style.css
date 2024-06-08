@@ -104,13 +104,13 @@ nav {
         margin: 0;
     }
     
-    .nav-links a {
-        padding: 15px 20px;
-        font-size: 18px;
+    .nav-links a.first {
         border-top: 1px solid #FFD700;
     }
     
-    .nav-links a:last-child {
+    .nav-links a {
+        padding: 15px 20px;
+        font-size: 18px;
         border-bottom: 1px solid #FFD700;
     }
 
@@ -120,7 +120,6 @@ nav {
 
     .nav-links.nav-active {
         left: 0;
-        transform: translateY(-2px);
     }
 
     button.nav-toggle:hover {

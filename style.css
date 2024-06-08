@@ -243,6 +243,7 @@ form input[type="datetime-local"] {
 
 form input[type="radio"] {
     width: auto;
+    margin-right: 5px;
 }
 
 .admin-section {
@@ -303,16 +304,21 @@ form input[type="radio"] {
 }
 
 .prediction-form .user-selector {
+    margin: 0;
     padding: 2.5px 0;
 }
 
 .prediction-form .user-selector label {
     cursor: pointer;
     display: inline-block;
+    width: 80%;
+}
+
+.prediction-form label {
     width: 48%;
 }
 
-.prediction-form .user-selector input {
+.prediction-form input[type="number"] {
     width: 48%;
 }
 

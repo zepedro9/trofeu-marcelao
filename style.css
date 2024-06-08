@@ -188,3 +188,8 @@ form input[type="datetime-local"] {
     font-size: 1em;
     color: #ccc;
 }
+
+.past-game {
+    opacity: 0.5;
+    background-color: #282828;
+}

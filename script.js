@@ -58,17 +58,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderGames(games) {
-        elements.gameInfoDiv.innerHTML = games.map(game => `
-            <div class="game-box">
-                <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
-                <p class="subdued">${game.Competicao}</p>
-                <p class="subdued">${game.Data.toDate().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
-                <p class="subdued">${game.Data.toDate().toLocaleDateString('en-GB')}</p>
-                ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
-                ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-            </div>
-        `).join('') || "Error loading game information.";
+        // Get the current date and time in the Portuguese time zone
+        const currentDateTime = new Date(new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/Lisbon',
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
+        }).format(Date.now()));
+    
+        // Sort the games array with the newest games first
+        games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
+    
+        elements.gameInfoDiv.innerHTML = games.map(game => {
+            const gameDateTime = game.Data.toDate();
+            const isPastGame = gameDateTime < currentDateTime;
+            return `
+                <div class="game-box ${isPastGame ? 'past-game' : ''}">
+                    <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
+                    <p class="subdued">${game.Competicao}</p>
+                    <p class="subdued">${gameDateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
+                    ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
+                    ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
+                </div>
+            `;
+        }).join('') || "Error loading game information.";
     }
+    
 
     function renderCompetitions(competitions) {
         elements.competitionInfoDiv.innerHTML = competitions.map(comp => `

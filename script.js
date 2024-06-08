@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function isPastGame(game) {
+    function getIsPastGame(game) {
         // Get the current date and time in the Portuguese time zone
         const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
         const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderGames(games) {
         const users = await fetchUsers();
-        
+
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     
         elements.gameInfoDiv.innerHTML = games.map(game => {
-            const isPastGame = isPastGame(game)
+            const isPastGame = getIsPastGame(game)
             return `
                 <div id="${game.id}" class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         games.map(game => {
-            if(!isPastGame(game)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+            if(!getIsPastGame(game)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
                 event.preventDefault();
                 const formData = new FormData(event.target);
                 const username = formData.get(`${game.id}-username`);

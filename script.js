@@ -84,10 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getIsPastGame(game) {
+    function getIsPastGame(gameDateTime) {
         // Get the current date and time in the Portuguese time zone
         const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-        const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
         return gameDateTime < currentDateTime;
     }
 
@@ -98,7 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     
         elements.gameInfoDiv.innerHTML = games.map(game => {
-            const isPastGame = getIsPastGame(game)
+            const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
+            const isPastGame = getIsPastGame(gameDateTime)
             return `
                 <div id="${game.id}" class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
@@ -160,7 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         games.map(game => {
-            if(!getIsPastGame(game)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+            const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
+            if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
                 event.preventDefault();
                 const formData = new FormData(event.target);
                 const username = formData.get(`${game.id}-username`);

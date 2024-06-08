@@ -10,7 +10,8 @@ nav {
     display: flex;
     align-items: center;
     background-color: #111;
-    justify-content: flex-start;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
 .nav-left {
@@ -19,21 +20,21 @@ nav {
 }
 
 .logo img {
-    margin: 0 0 0 20px;
     width: 60px;
 }
 
 .nav-links {
-    margin: 0;
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-links a {
-    padding: 25px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
-    font-size: 22px;
+    font-size: 18px;
     color: #FFD700;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -50,8 +51,86 @@ nav {
 }
 
 .nav-right {
-    margin-left: auto;
-    padding-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-toggle .hamburger,
+.nav-toggle .hamburger::before,
+.nav-toggle .hamburger::after {
+    content: '';
+    width: 30px;
+    height: 3px;
+    background: #FFD700;
+    border-radius: 3px;
+}
+
+.nav-toggle .hamburger::before,
+.nav-toggle .hamburger::after {
+    position: absolute;
+    transition: all 0.3s;
+}
+
+.nav-toggle .hamburger::before {
+    transform: translateY(-10px);
+}
+
+.nav-toggle .hamburger::after {
+    transform: translateY(10px);
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        background-color: #111;
+        transition: left 0.3s ease;
+    }
+    
+    .nav-links a {
+        padding: 15px 20px;
+        font-size: 18px;
+        border-top: 1px solid #FFD700;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-links.nav-active {
+        left: 0;
+    }
+}
+
+/* Media Queries for Smaller Mobile Devices */
+@media (max-width: 480px) {
+    .nav-links a {
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+
+    .logo img {
+        width: 50px;
+    }
 }
 
 .container {

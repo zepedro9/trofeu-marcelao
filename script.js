@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const auth = getAuth(app);
 
     const elements = {
+        navToggle: document.querySelector('.nav-toggle'),
+        navLinks: document.querySelector('.nav-links'),
         gameInfoDiv: document.getElementById('game-info'),
         loginForm: document.getElementById('login-form'),
         adminLoginButton: document.getElementById('admin-login-button'),
@@ -25,6 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         adminCompetitionSection: document.getElementById('admin-competition-section'),
         leaderboardDiv: document.getElementById('leaderboard'),
     };
+    
+    elements.navToggle.addEventListener('click', function() {
+        elements.navLinks.classList.toggle('nav-active');
+    });
 
     function showPage(page) {
         const pages = ['jogos', 'competition', 'classificacao'];

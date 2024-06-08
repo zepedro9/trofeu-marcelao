@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const elements = {
         navToggle: document.querySelector('.nav-toggle'),
         navLinks: document.querySelector('.nav-links'),
+        navLinksItems: document.querySelectorAll('.nav-links a'),
         gameInfoDiv: document.getElementById('game-info'),
         loginForm: document.getElementById('login-form'),
         adminLoginButton: document.getElementById('admin-login-button'),
@@ -30,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     elements.navToggle.addEventListener('click', function() {
         elements.navLinks.classList.toggle('nav-active');
+    });
+
+    elements.navLinksItems.forEach(link => {
+        link.addEventListener('click', function() {
+            elements.navLinks.classList.remove('nav-active');
+        });
     });
 
     function showPage(page) {

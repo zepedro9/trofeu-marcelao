@@ -59,18 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderGames(games) {
         // Get the current date and time in the Portuguese time zone
-        const currentDateTime = new Date(new Intl.DateTimeFormat('en-GB', {
-            timeZone: 'Europe/Lisbon',
-            year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric'
-        }).format(Date.now()));
+        const currentDateTime = new Date().toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' });
+        const currentDate = new Date(currentDateTime);
     
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     
         elements.gameInfoDiv.innerHTML = games.map(game => {
             const gameDateTime = game.Data.toDate();
-            const isPastGame = gameDateTime < currentDateTime;
+            const isPastGame = gameDateTime < currentDate;
             return `
                 <div class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
@@ -82,8 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
-    }
-    
+    }    
 
     function renderCompetitions(competitions) {
         elements.competitionInfoDiv.innerHTML = competitions.map(comp => `

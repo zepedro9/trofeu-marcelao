@@ -191,5 +191,5 @@ form input[type="datetime-local"] {
 
 .past-game {
     opacity: 0.5;
-    background-color: #282828;
+    background-color: #111;
 }

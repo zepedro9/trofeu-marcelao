@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderGames(games) {
-        const users = fetchUsers();
+    async function renderGames(games) {
+        const users = await fetchUsers();
 
         // Get the current date and time in the Portuguese time zone
         const currentDateTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <input type="number" id="casa" name="casa" required>
                         </div>
                         <div>
-                            <label for="fora">${game.Fora}:</label>
+                            <label for="fora">${game.Casa}:</label>
                             <input type="number" id="fora" name="fora" required>
                         </div>
                         <div>

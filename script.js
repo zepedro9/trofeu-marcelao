@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-                    ${!isPastGame ? <form id="${game.id}-prediction-form" class="prediction-form hidden">
+                    ${!isPastGame ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
                         <p class="highlight">Submeter previsão:</p>
                         <p>Seleciona quem és:</p>
                         <div>
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <input type="password" id="${game.id}-password" name="password" required/>
                         </div>
                         <button type="submit">Submit Prediction</button>
-                    </form> : ''}
+                    </form>` : ''}
                 </div>
             `;
         }).join('') || "Error loading game information.";

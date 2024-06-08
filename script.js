@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         games.map(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
             if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+                console.log("Got here")
                 event.preventDefault();
                 const formData = new FormData(event.target);
                 const username = formData.get(`${game.id}-username`);

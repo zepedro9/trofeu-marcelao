@@ -315,11 +315,12 @@ form input[type="radio"] {
 }
 
 .prediction-form label {
-    width: 48%;
+    width: 45%;
+    display: inline-block;
 }
 
-.prediction-form input[type="number"] {
-    width: 48%;
+.prediction-form input[type="number"], .prediction-form input[type="password"] {
+    width: 45%;
 }
 
 .prediction-form div {

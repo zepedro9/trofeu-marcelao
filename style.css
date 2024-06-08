@@ -109,6 +109,10 @@ nav {
         font-size: 18px;
         border-top: 1px solid #FFD700;
     }
+    
+    .nav-links a:last-child {
+        border-bottom: 1px solid #FFD700;
+    }
 
     .nav-toggle {
         display: flex;
@@ -116,10 +120,11 @@ nav {
 
     .nav-links.nav-active {
         left: 0;
+        transform: translateY(-2px);
     }
 
-    button:hover {
-        background-color: transparent;
+    button.nav-toggle:hover {
+        background: transparent;
     }
 }
 

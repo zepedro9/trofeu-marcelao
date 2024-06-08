@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
                     ${!isPastGame ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
+                        <p class="separator"><p>
                         <p class="highlight">Submeter previsão:</p>
                         <p>Seleciona quem és:</p>
                         <div>

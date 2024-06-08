@@ -35,7 +35,7 @@ nav {
     display: flex;
     align-items: center;
     font-size: 18px;
-    color: #FFD700;
+    color: gold;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -43,7 +43,7 @@ nav {
 .nav-links a.active,
 .nav-links a:hover {
     color: #222;
-    background-color: #FFD700;
+    background-color: gold;
 }
 
 .nav-links i {
@@ -73,7 +73,7 @@ nav {
     content: '';
     width: 30px;
     height: 3px;
-    background: #FFD700;
+    background: gold;
     border-radius: 3px;
 }
 
@@ -105,13 +105,13 @@ nav {
     }
     
     .nav-links a.first {
-        border-top: 1px solid #FFD700;
+        border-top: 1px solid gold;
     }
     
     .nav-links a {
         padding: 15px 20px;
         font-size: 18px;
-        border-bottom: 1px solid #FFD700;
+        border-bottom: 1px solid gold;
     }
 
     .nav-toggle {
@@ -147,7 +147,7 @@ nav {
 }
 
 h1 {
-    color: #FFD700;
+    color: gold;
     margin-bottom: 20px;
 }
 
@@ -164,7 +164,7 @@ h1 {
 .player-box {
     width: 100%;
     padding: 10px 20px;
-    max-width: 300px;
+    max-width: 400px;
     border-radius: 5px;
     cursor: pointer;
     background-color: #333;
@@ -202,7 +202,7 @@ h1 {
     text-align: center;
     padding: 20px;
     background-color: #333;
-    border: 1px solid #FFD700;
+    border: 1px solid gold;
     border-radius: 5px;
     width: 300px;
     margin: 20px auto;
@@ -220,7 +220,7 @@ button {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #FFD700;
+    background-color: gold;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -237,12 +237,16 @@ input {
     border: 1px solid #ccc;
 }
 
-.admin-section {
-    margin-top: 20px;
-}
-
 form input[type="datetime-local"] {
     width: calc(100% - 22px);
+}
+
+form input[type="radio"] {
+    width: auto;
+}
+
+.admin-section {
+    margin-top: 20px;
 }
 
 .leaderboard {
@@ -253,14 +257,14 @@ form input[type="datetime-local"] {
 
 .leaderboard th,
 .leaderboard td {
-    border: 1px solid #FFD700;
+    border: 1px solid gold;
     padding: 10px;
     text-align: left;
 }
 
 .leaderboard th {
     background-color: #444;
-    color: #FFD700;
+    color: gold;
     font-weight: bold;
 }
 
@@ -286,19 +290,39 @@ form input[type="datetime-local"] {
 
 .expanded {
     display: block;
-    border: 1px solid #FFD700;
+    border: 1px solid gold;
 }
 
 .prediction-form {
-    margin-top: 25px;
     text-align: left;
 }
 
 .prediction-form .highlight {
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .prediction-form .user-selector {
-    padding: 10px;
+    padding: 2.5px 0;
+}
+
+.prediction-form .user-selector label {
+    cursor: pointer;
+    display: inline-block;
+    width: 48%;
+}
+
+.prediction-form .user-selector input {
+    width: 48%;
+}
+
+.prediction-form div {
+    margin: 10px 0;
+}
+
+p.separator {
+    width: 100%;
+    margin: 15px 0;
+    height: 1px;
+    background: gold;
 }

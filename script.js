@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to fetch users from Firestore
     async function fetchUsers() {
-        const snapshot = await db.collection('jogadores').get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const snapshot = await getDocs(collection(db, 'jogadores'));
+        return snapshot.docs.map(doc => doc.data());
     }
 
     async function fetchData(collectionName, renderFunction) {

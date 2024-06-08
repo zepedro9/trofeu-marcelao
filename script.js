@@ -138,19 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add event listeners for toggling visibility
         document.querySelectorAll('.game-box').forEach(box => {
-            box.addEventListener('click', function() {
+            if(!box.classList.contains('past-game')) box.addEventListener('click', function() {
                 if (this.classList.contains('expanded')) {
                     // Remove expanded class to show all games
                     document.querySelectorAll('.game-box').forEach(box => {
                         box.classList.remove('hidden');
-                        box.querySelector('.prediction-form').classList.add('hidden');
+                        if(!box.classList.contains('past-game')) box.querySelector('.prediction-form').classList.add('hidden');
                     });
                     this.classList.remove('expanded');
                 } else {
                     // Hide all other games and expand the clicked one
                     document.querySelectorAll('.game-box').forEach(box => {
                         box.classList.add('hidden');
-                        box.querySelector('.prediction-form').classList.add('hidden');
+                        if(!box.classList.contains('past-game')) box.querySelector('.prediction-form').classList.add('hidden');
                     });
                     this.classList.remove('hidden');
                     this.classList.add('expanded');

@@ -277,6 +277,7 @@ form input[type="datetime-local"] {
 .past-game {
     opacity: 0.4;
     background-color: #111;
+    cursor: default !important;
 }
 
 .hidden {

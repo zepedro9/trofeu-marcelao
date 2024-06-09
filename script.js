@@ -175,8 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         form.querySelectorAll('input[type="radio"][name="username"]').forEach(radio => {
                             radio.addEventListener('change', function() {
                                 const selectedUser = users.find(user => user.Nome === this.value);
-                                const passwordField = form.querySelector(`#${game.id}-password`);
-                                const passwordLabel = form.querySelector(`label[for="${game.id}-password"]`);
+                                const passwordLabel = form.querySelector(`label[for="${radio.id.split('-')[0]}-password"]`);
                                 if (selectedUser && selectedUser.Password === '') {
                                     passwordLabel.textContent = 'Criar password:';
                                 } else {

@@ -148,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (!box.classList.contains('past-game')) {
                                 const form = box.querySelector('.prediction-form');
                                 form.classList.add('hidden');
+                                // Remove required attributes when form is hidden
+                                form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
                             }
                         });
                         this.classList.remove('expanded');
@@ -158,12 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (!box.classList.contains('past-game')) {
                                 const form = box.querySelector('.prediction-form');
                                 form.classList.add('hidden');
+                                // Remove required attributes when form is hidden
+                                form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
                             }
                         });
                         this.classList.remove('hidden');
                         this.classList.add('expanded');
                         const form = this.querySelector('.prediction-form');
                         form.classList.remove('hidden');
+                        // Add required attributes when form is shown
+                        form.querySelectorAll('input').forEach(input => input.setAttribute('required', 'required'));
                     }
                 });
             }
@@ -181,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const password = formData.get('password');
                     
                     const userDoc = users.find(user => user.Nome === username);
-                    const hashedPassword = hashPassword(password);
+                    const hashedPassword = await hashPassword(password);
     
                     if (userDoc && userDoc.Password === hashedPassword) {
                         alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);

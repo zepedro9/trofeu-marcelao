@@ -170,6 +170,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         form.classList.remove('hidden');
                         // Add required attributes when form is shown
                         form.querySelectorAll('input').forEach(input => input.setAttribute('required', 'required'));
+                        
+                        // Add event listener to radio buttons to check password status
+                        form.querySelectorAll('input[type="radio"][name="username"]').forEach(radio => {
+                            radio.addEventListener('change', function() {
+                                const selectedUser = users.find(user => user.Nome === this.value);
+                                const passwordField = form.querySelector(`#${game.id}-password`);
+                                const passwordLabel = form.querySelector(`label[for="${game.id}-password"]`);
+                                if (selectedUser && selectedUser.Password === '') {
+                                    passwordLabel.textContent = 'Criar password:';
+                                } else {
+                                    passwordLabel.textContent = 'Password:';
+                                }
+                            });
+                        });
                     }
                 });
             }
@@ -178,8 +192,15 @@ document.addEventListener('DOMContentLoaded', () => {
         games.forEach(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
             if (!getIsPastGame(gameDateTime)) {
-                document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+                const form = document.getElementById(`${game.id}-prediction-form`);
+                form.addEventListener('submit', async function(event) {
                     event.preventDefault();
+                    
+                    if (!form.reportValidity()) {
+                        alert('Preenche todos campos antes de submeter');
+                        return;
+                    }
+        
                     const formData = new FormData(event.target);
                     const username = formData.get('username');
                     const casa = formData.get('casa');
@@ -187,17 +208,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const password = formData.get('password');
                     
                     const userDoc = users.find(user => user.Nome === username);
-                    const hashedPassword = await hashPassword(password);
-    
-                    if (userDoc && userDoc.Password === hashedPassword) {
-                        alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
-                    } else {
-                        alert('Incorrect password.');
+                    const hashedPassword = hashPassword(password);
+        
+                    if (userDoc) {
+                        if (userDoc.Password === '') {
+                            // Set the new password
+                            userDoc.Password = hashedPassword;
+                            await updateDoc(doc(db, 'jogadores', userDoc.id), { Password: userDoc.Password });
+                            alert('Password criada com sucesso.');
+                        } else if (userDoc.Password === hashedPassword) {
+                            alert(`Previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
+                        } else {
+                            alert('Password errada.');
+                        }
                     }
                 });
             }
         });
-    }
+    }    
 
     function renderCompetitions(competitions) {
         elements.competitionInfoDiv.innerHTML = competitions.map(comp => `

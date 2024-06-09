@@ -92,13 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderGames(games) {
         const users = await fetchUsers();
-
+    
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
     
         elements.gameInfoDiv.innerHTML = games.map(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-            const isPastGame = getIsPastGame(gameDateTime)
+            const isPastGame = getIsPastGame(gameDateTime);
             return `
                 <div id="${game.id}" class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
                     ${!isPastGame ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
-                        <p class="separator"><p>
+                        <p class="separator"></p>
                         <p class="highlight">Submeter previsão:</p>
                         <p>Seleciona quem és:</p>
                         <div>
@@ -136,50 +136,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
-
+    
         // Add event listeners for toggling visibility
         document.querySelectorAll('.game-box').forEach(box => {
-            if(!box.classList.contains('past-game')) box.addEventListener('click', function() {
-                if (this.classList.contains('expanded')) {
-                    // Remove expanded class to show all games
-                    document.querySelectorAll('.game-box').forEach(box => {
-                        box.classList.remove('hidden');
-                        if(!box.classList.contains('past-game')) box.querySelector('.prediction-form').classList.add('hidden');
-                    });
-                    this.classList.remove('expanded');
-                } else {
-                    // Hide all other games and expand the clicked one
-                    document.querySelectorAll('.game-box').forEach(box => {
-                        box.classList.add('hidden');
-                        if(!box.classList.contains('past-game')) box.querySelector('.prediction-form').classList.add('hidden');
-                    });
-                    this.classList.remove('hidden');
-                    this.classList.add('expanded');
-                    this.querySelector('.prediction-form').classList.remove('hidden');
-                }
-            });
+            if (!box.classList.contains('past-game')) {
+                box.addEventListener('click', function() {
+                    if (this.classList.contains('expanded')) {
+                        // Remove expanded class to show all games
+                        document.querySelectorAll('.game-box').forEach(box => {
+                            box.classList.remove('hidden');
+                            if (!box.classList.contains('past-game')) {
+                                const form = box.querySelector('.prediction-form');
+                                form.classList.add('hidden');
+                            }
+                        });
+                        this.classList.remove('expanded');
+                    } else {
+                        // Hide all other games and expand the clicked one
+                        document.querySelectorAll('.game-box').forEach(box => {
+                            box.classList.add('hidden');
+                            if (!box.classList.contains('past-game')) {
+                                const form = box.querySelector('.prediction-form');
+                                form.classList.add('hidden');
+                            }
+                        });
+                        this.classList.remove('hidden');
+                        this.classList.add('expanded');
+                        const form = this.querySelector('.prediction-form');
+                        form.classList.remove('hidden');
+                    }
+                });
+            }
         });
-
-        games.map(game => {
+    
+        games.forEach(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
-            if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', function(event) {
-                console.log("Got here")
-                event.preventDefault();
-                /*const formData = new FormData(event.target);
-                const username = formData.get(`${game.id}-username`);
-                const casa = formData.get(`${game.id}-casa`);
-                const fora = formData.get(`${game.id}-fora`);
-                const password = formData.get(`${game.id}-password`);
-                
-                const userDoc = users.find(user => user.Nome === username);
-                const hashedPassword = hashPassword(password);
-
-                if (userDoc && userDoc.Password === hashedPassword) {
-                    alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
-                } else {
-                    alert('Incorrect password.');
-                }*/
-            });
+            if (!getIsPastGame(gameDateTime)) {
+                document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(event.target);
+                    const username = formData.get('username');
+                    const casa = formData.get('casa');
+                    const fora = formData.get('fora');
+                    const password = formData.get('password');
+                    
+                    const userDoc = users.find(user => user.Nome === username);
+                    const hashedPassword = hashPassword(password);
+    
+                    if (userDoc && userDoc.Password === hashedPassword) {
+                        alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
+                    } else {
+                        alert('Incorrect password.');
+                    }
+                });
+            }
         });
     }
 

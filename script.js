@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!getIsPastGame(gameDateTime)) document.getElementById(`${game.id}-prediction-form`).addEventListener('submit', function(event) {
                 console.log("Got here")
                 event.preventDefault();
-                const formData = new FormData(event.target);
+                /*const formData = new FormData(event.target);
                 const username = formData.get(`${game.id}-username`);
                 const casa = formData.get(`${game.id}-casa`);
                 const fora = formData.get(`${game.id}-fora`);
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`Prediction submitted: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
                 } else {
                     alert('Incorrect password.');
-                }
+                }*/
             });
         });
     }

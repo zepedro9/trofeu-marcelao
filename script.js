@@ -1,5 +1,5 @@
 import { app } from './firebaseConfig.js';
-import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -90,8 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return gameDateTime < currentDateTime;
     }
 
+    async function fetchPredictions() {
+        const snapshot = await getDocs(collection(db, 'previsoes'));
+        return snapshot.docs.map(doc => doc.data());
+    }    
+
     async function renderGames(games) {
         const users = await fetchUsers();
+        const predictions = await fetchPredictions();
+
+        // Create a lookup for predictions by game and user
+        const predictionLookup = predictions.reduce((acc, pred) => {
+            if (!acc[pred.Jogo]) {
+                acc[pred.Jogo] = new Set();
+            }
+            acc[pred.Jogo].add(pred.Jogador);
+            return acc;
+        }, {});
     
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
@@ -99,6 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.gameInfoDiv.innerHTML = games.map(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
             const isPastGame = getIsPastGame(gameDateTime);
+
+            // Filter users who have not made a prediction for this game
+            const availableUsers = users.filter(user => !predictionLookup[game.id] || !predictionLookup[game.id].has(user.Nome));
+
             return `
                 <div id="${game.id}" class="game-box ${isPastGame ? 'past-game' : ''}">
                     <p class="highlight">${game.Casa} Vs ${game.Fora}</p>
@@ -107,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-                    ${!isPastGame ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
+                    ${!isPastGame && availableUsers.length > 0 ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
                         <p class="separator"></p>
                         <p class="highlight">Submeter previsão:</p>
                         <p>Seleciona quem és:</p>
                         <div>
-                            ${users.map(user => `
+                            ${availableUsers.map(user => `
                                 <div class="user-selector">
                                     <input type="radio" id="${game.id}-${user.id}" name="username" value="${user.Nome}" required>
                                     <label for="${game.id}-${user.id}">${user.Nome}</label>
@@ -137,56 +156,64 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }).join('') || "Error loading game information.";
     
-        // Add event listeners for toggling visibility
         document.querySelectorAll('.game-box').forEach(box => {
             if (!box.classList.contains('past-game')) {
-                box.addEventListener('click', function() {
-                    if (this.classList.contains('expanded')) {
-                        // Remove expanded class to show all games
-                        document.querySelectorAll('.game-box').forEach(box => {
-                            box.classList.remove('hidden');
-                            if (!box.classList.contains('past-game')) {
-                                const form = box.querySelector('.prediction-form');
-                                form.classList.add('hidden');
-                                // Remove required attributes when form is hidden
-                                form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
+                box.addEventListener('click', function(event) {
+                    // Prevent the document click handler from firing immediately
+                    event.stopPropagation();
+        
+                    // Hide all other games and expand the clicked one
+                    document.querySelectorAll('.game-box').forEach(box => {
+                        box.classList.add('hidden');
+                        if (!box.classList.contains('past-game')) {
+                            const form = box.querySelector('.prediction-form');
+                            form.classList.add('hidden');
+                            // Remove required attributes when form is hidden
+                            form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
+                        }
+                    });
+                    this.classList.remove('hidden');
+                    this.classList.add('expanded');
+                    const form = this.querySelector('.prediction-form');
+                    form.classList.remove('hidden');
+                    // Add required attributes when form is shown
+                    form.querySelectorAll('input').forEach(input => input.setAttribute('required', 'required'));
+        
+                    // Add event listener to radio buttons to check password status
+                    form.querySelectorAll('input[type="radio"][name="username"]').forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const selectedUser = users.find(user => user.Nome === this.value);
+                            const passwordLabel = form.querySelector(`label[for="${radio.id.split('-')[0]}-password"]`);
+                            if (selectedUser && selectedUser.Password === '') {
+                                passwordLabel.textContent = 'Criar password:';
+                            } else {
+                                passwordLabel.textContent = 'Password:';
                             }
                         });
-                        this.classList.remove('expanded');
-                    } else {
-                        // Hide all other games and expand the clicked one
-                        document.querySelectorAll('.game-box').forEach(box => {
-                            box.classList.add('hidden');
-                            if (!box.classList.contains('past-game')) {
-                                const form = box.querySelector('.prediction-form');
-                                form.classList.add('hidden');
-                                // Remove required attributes when form is hidden
-                                form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
-                            }
-                        });
-                        this.classList.remove('hidden');
-                        this.classList.add('expanded');
-                        const form = this.querySelector('.prediction-form');
-                        form.classList.remove('hidden');
-                        // Add required attributes when form is shown
-                        form.querySelectorAll('input').forEach(input => input.setAttribute('required', 'required'));
-                        
-                        // Add event listener to radio buttons to check password status
-                        form.querySelectorAll('input[type="radio"][name="username"]').forEach(radio => {
-                            radio.addEventListener('change', function() {
-                                const selectedUser = users.find(user => user.Nome === this.value);
-                                const passwordLabel = form.querySelector(`label[for="${radio.id.split('-')[0]}-password"]`);
-                                if (selectedUser && selectedUser.Password === '') {
-                                    passwordLabel.textContent = 'Criar password:';
-                                } else {
-                                    passwordLabel.textContent = 'Password:';
+                    });
+        
+                    // Add a click listener to the document to close the expanded box when clicking outside
+                    document.addEventListener('click', function closeBox(event) {
+                        if (!box.contains(event.target)) {
+                            // Show all game boxes
+                            document.querySelectorAll('.game-box').forEach(box => {
+                                box.classList.remove('hidden');
+                                if (!box.classList.contains('past-game')) {
+                                    const form = box.querySelector('.prediction-form');
+                                    form.classList.add('hidden');
+                                    // Remove required attributes when form is hidden
+                                    form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
                                 }
                             });
-                        });
-                    }
+                            box.classList.remove('expanded');
+                            
+                            // Remove this event listener after execution
+                            document.removeEventListener('click', closeBox);
+                        }
+                    });
                 });
             }
-        });
+        });        
     
         games.forEach(game => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
@@ -208,14 +235,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const userDoc = users.find(user => user.Nome === username);
                     const hashedPassword = hashPassword(password);
+
+                    const previsao = {
+                        Casa: casa,
+                        Fora: fora,
+                        Jogador: username,
+                        Jogo: game.id
+                    };
         
                     if (userDoc) {
                         if (userDoc.Password === '') {
                             // Set the new password
                             userDoc.Password = hashedPassword;
                             await updateDoc(doc(db, 'jogadores', userDoc.id), { Password: userDoc.Password });
-                            alert('Password criada com sucesso.');
+                            await addDoc(collection(db, 'previsoes'), previsao);
+                            alert(`Password criada e previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
                         } else if (userDoc.Password === hashedPassword) {
+                            await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
                         } else {
                             alert('Password errada.');

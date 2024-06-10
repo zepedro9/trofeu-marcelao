@@ -155,6 +155,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
+
+        function closeAllGameBoxes() {
+            document.querySelectorAll('.game-box').forEach(box => {
+                box.classList.remove('hidden');
+                if (!box.classList.contains('past-game')) {
+                    const form = box.querySelector('.prediction-form');
+                    form.classList.add('hidden');
+                    // Remove required attributes when form is hidden
+                    form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
+                }
+                box.classList.remove('expanded');
+            });
+        }
     
         document.querySelectorAll('.game-box').forEach(box => {
             if (!box.classList.contains('past-game')) {
@@ -247,20 +260,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (userDoc.Password === '') {
                             // Set the new password
                             userDoc.Password = hashedPassword;
-                            await updateDoc(doc(db, 'jogadores', userDoc.id), { Password: userDoc.Password });
+                            await updateDoc(doc(db, 'jogadores', userDoc.id), { Password: hashedPassword });
                             await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Password criada e previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
+                            window.location.reload();
                         } else if (userDoc.Password === hashedPassword) {
                             await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
+                            window.location.reload();
                         } else {
                             alert('Password errada.');
                         }
+                        closeAllGameBoxes();
                     }
                 });
             }
         });
-    }    
+    }
 
     function renderCompetitions(competitions) {
         elements.competitionInfoDiv.innerHTML = competitions.map(comp => `

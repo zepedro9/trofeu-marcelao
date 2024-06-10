@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper function to hash passwords
-    function hashPassword(password) {
+    async function hashPassword(password) {
         const msgUint8 = new TextEncoder().encode(password);
         const hashBuffer = crypto.subtle.digest('SHA-256', msgUint8);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -155,19 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('') || "Error loading game information.";
-
-        function closeAllGameBoxes() {
-            document.querySelectorAll('.game-box').forEach(box => {
-                box.classList.remove('hidden');
-                if (!box.classList.contains('past-game')) {
-                    const form = box.querySelector('.prediction-form');
-                    form.classList.add('hidden');
-                    // Remove required attributes when form is hidden
-                    form.querySelectorAll('[required]').forEach(input => input.removeAttribute('required'));
-                }
-                box.classList.remove('expanded');
-            });
-        }
     
         document.querySelectorAll('.game-box').forEach(box => {
             if (!box.classList.contains('past-game')) {
@@ -247,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const password = formData.get('password');
                     
                     const userDoc = users.find(user => user.Nome === username);
-                    const hashedPassword = hashPassword(password);
+                    const hashedPassword = await hashPassword(password);
 
                     const previsao = {
                         Casa: casa,
@@ -258,8 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
                     if (userDoc) {
                         if (userDoc.Password === '') {
-                            // Set the new password
-                            userDoc.Password = hashedPassword;
+                            // Set the new password        
                             await updateDoc(doc(db, 'jogadores', userDoc.id), { Password: hashedPassword });
                             await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Password criada e previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);
@@ -271,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             alert('Password errada.');
                         }
-                        closeAllGameBoxes();
                     }
                 });
             }

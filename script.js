@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             acc[pred.Jogo][pred.Jogador] = pred;  // Store the entire prediction object
             return acc;
-        }, {});        
+        }, {});
     
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="separator"></p>
                         <p class="highlight">Previsões</p>
                         ${usersWithPredictions.map(user => `
-                            <p class="subdued">${user.Nome}: ${predictionLookup[game.id][user.Nome].predictionField}</p>
+                            <p class="subdued">${user.Nome}: ${predictionLookup[game.id][user.Nome].Casa} - ${predictionLookup[game.id][user.Nome].Fora}</p>
                         `).join('')}
                     ` : ''}
 

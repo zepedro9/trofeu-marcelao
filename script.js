@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper function to hash passwords
-    function hashPassword(password) {
+    async function hashPassword(password) {
         const msgUint8 = new TextEncoder().encode(password);
-        const hashBuffer = crypto.subtle.digest('SHA-256', msgUint8);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const userDoc = users.find(user => user.Nome === username);
                     console.log("Password: " + password);
-                    const hashedPassword = hashPassword(password);
+                    const hashedPassword = await hashPassword(password);
                     console.log("Hashed password: " + hashedPassword);
 
                     const previsao = {

@@ -374,14 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements.loginForm.style.display = 'none';
             })
             .catch(error => console.error("Error signing in: ", error));
-        renderGames();
+        fetchData("jogos", renderGames);
     });
 
     elements.logoutButton.addEventListener('click', () => {
         signOut(auth)
             .then(() => console.log("User signed out"))
             .catch(error => console.error("Error signing out: ", error));
-        renderGames();
+        fetchData("jogos", renderGames);
     });
 
     onAuthStateChanged(auth, handleAuthStateChanged);

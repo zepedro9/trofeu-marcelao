@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 document.addEventListener('DOMContentLoaded', () => {
     const db = getFirestore(app);
     const auth = getAuth(app);
+    const isAdminLoggedIn = false
 
     const elements = {
         navToggle: document.querySelector('.nav-toggle'),
@@ -15,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         adminLoginButton: document.getElementById('admin-login-button'),
         loginButton: document.getElementById('login-button'),
         logoutButton: document.getElementById('logout-button'),
-        adminSection: document.getElementById('admin-section'),
+        adminGameSection: document.getElementById('admin-game-section'),
+        adminCompetitionSection: document.getElementById('admin-competition-section'),
         gameForm: document.getElementById('create-game-form'),
         jogosPage: document.getElementById('jogos-page'),
         competitionPage: document.getElementById('competition-page'),
@@ -25,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         classificacaoLink: document.getElementById('classificacao-link'),
         competitionInfoDiv: document.getElementById('competition-info'),
         competitionForm: document.getElementById('competition-form'),
-        adminCompetitionSection: document.getElementById('admin-competition-section'),
         leaderboardDiv: document.getElementById('leaderboard'),
     };
     
@@ -61,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleAuthStateChanged(user) {
         const display = user ? 'block' : 'none';
-        elements.adminSection.style.display = display;
+        isAdminLoggedIn = true;
+        elements.adminGameSection.style.display = display;
         elements.adminCompetitionSection.style.display = display;
         elements.adminLoginButton.style.display = user ? 'none' : 'block';
         elements.logoutButton.style.display = user ? 'block' : 'none';
@@ -160,6 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <input type="password" id="${game.id}-password" name="password" required/>
                             </div>
                             <button type="submit">Submit Prediction</button>
+                        </form>
+                    ` : ''}
+
+                    ${isPastGame && isAdminLoggedIn ? `
+                        <form id="set-game-result-form" onsubmit="handleSetGameResultFormSubmit(event, '${game.id}')">
+                            <input type="text" id="casa" placeholder="${game.Casa}" required />
+                            <input type="text" id="fora" placeholder="${game.Fora}" required />
+                            <button type="submit">Submit Game</button>
                         </form>
                     ` : ''}
                 </div>
@@ -316,6 +326,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         addDocument("jogos", data, () => fetchData("jogos", renderGames));
         elements.gameForm.reset();
+    }
+
+    async function handleSetGameResultFormSubmit(e, gameId) {
+        e.preventDefault();
+        const data = {
+            Casa: document.getElementById('casa').value,
+            Fora: document.getElementById('fora').value,
+        };
+        await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
     }
 
     function handleCompetitionFormSubmit(e) {

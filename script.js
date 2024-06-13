@@ -319,10 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const form = e.target; // Get the form element
         const data = {
-            Casa: form.querySelector('casa').value,
-            Fora: form.querySelector('fora').value,
-            Data: new Date(form.querySelector('data').value),
-            Competicao: form.querySelector('competicao').value,
+            Casa: form.querySelector('#casa').value,
+            Fora: form.querySelector('#fora').value,
+            Data: new Date(form.querySelector('#data').value),
+            Competicao: form.querySelector('#competicao').value,
             Resultado: "",
         };
         addDocument("jogos", data, () => fetchData("jogos", renderGames));
@@ -333,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const form = e.target;
         const data = {
-            Casa: form.querySelector('casa').value,
-            Fora: form.querySelector('fora').value,
+            Casa: form.querySelector('#casa').value,
+            Fora: form.querySelector('#fora').value,
         };
         try {
             await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
@@ -349,9 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const form = e.target;
         const data = {
-            Nome: form.querySelector('nome').value,
-            Limite: new Date(form.querySelector('limite').value),
-            Vencedor: form.querySelector('vencedor-competicao').value,
+            Nome: form.querySelector('#nome').value,
+            Limite: new Date(form.querySelector('#limite').value),
+            Vencedor: form.querySelector('#vencedor-competicao').value,
         };
         addDocument("competicoes", data, () => fetchData("competicoes", renderCompetitions));
         elements.competitionForm.reset();

@@ -317,11 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleCreateGameFormSubmit(e) {
         e.preventDefault();
+        const form = e.target; // Get the form element
         const data = {
-            Casa: document.getElementById('casa').value,
-            Fora: document.getElementById('fora').value,
-            Data: new Date(document.getElementById('data').value),
-            Competicao: document.getElementById('competicao').value,
+            Casa: form.querySelector('casa').value,
+            Fora: form.querySelector('fora').value,
+            Data: new Date(form.querySelector('data').value),
+            Competicao: form.querySelector('competicao').value,
             Resultado: "",
         };
         addDocument("jogos", data, () => fetchData("jogos", renderGames));
@@ -330,9 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.handleSetGameResultFormSubmit = async function (e, gameId) {
         e.preventDefault();
+        const form = e.target;
         const data = {
-            Casa: document.getElementById(`casa-${gameId}`).value,
-            Fora: document.getElementById(`fora-${gameId}`).value,
+            Casa: form.querySelector(`#casa-${gameId}`).value,
+            Fora: form.querySelector(`#fora-${gameId}`).value,
         };
         try {
             await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
@@ -345,10 +347,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleCompetitionFormSubmit(e) {
         e.preventDefault();
+        const form = e.target;
         const data = {
-            Nome: document.getElementById('nome').value,
-            Limite: new Date(document.getElementById('limite').value),
-            Vencedor: document.getElementById('vencedor-competicao').value,
+            Nome: form.querySelector('nome').value,
+            Limite: new Date(form.querySelector('limite').value),
+            Vencedor: form.querySelector('vencedor-competicao').value,
         };
         addDocument("competicoes", data, () => fetchData("competicoes", renderCompetitions));
         elements.competitionForm.reset();

@@ -1,5 +1,5 @@
 import { app } from './firebaseConfig.js';
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDoc, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -303,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <tr>
                 <td class="highlight">${player.Nome}</td>
                 <td class="subdued">${player.Pontos}</td>
-                <td class="subdued">${player.Ganhos} €</td>
             </tr>
         `).join('') || "<tr><td colspan='3'>Error loading leaderboard information.</td></tr>";
     }
@@ -338,15 +337,47 @@ document.addEventListener('DOMContentLoaded', () => {
             Casa: form.querySelector('#casa').value,
             Fora: form.querySelector('#fora').value,
         };
+        const result = data.Casa + " - " + data.Fora;
+    
         try {
-            await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
+            // Update game result
+            await updateDoc(doc(db, "jogos", gameId), { Resultado: result });
+    
+            // Fetch all predictions for this game
+            const predictionsQuery = query(collection(db, "previsoes"), where("Jogo", "==", gameId));
+            const predictionsSnapshot = await getDocs(predictionsQuery);
+    
+            // Iterate through predictions and update points
+            const updatePromises = predictionsSnapshot.docs.map(async (predictionDoc) => {
+                const predictionData = predictionDoc.data();
+                const predictedResult = predictionData.Casa + " - " + predictionData.Fora;
+    
+                const playerDocRef = doc(db, "jogadores", predictionData.Jogador);
+                const playerDoc = await getDoc(playerDocRef);
+    
+                if (playerDoc.exists()) {
+                    const currentPoints = playerDoc.data().Pontos || 0;
+                    let updatedPoints = currentPoints + 1; // Add 1 point for participation
+    
+                    if (predictedResult === result) {
+                        updatedPoints += 3; // Add 3 points for correct prediction
+                    }
+    
+                    // Update the player's points
+                    return updateDoc(playerDocRef, { Pontos: updatedPoints });
+                }
+            });
+    
+            // Wait for all updates to complete
+            await Promise.all(updatePromises);
+    
             alert("Game result updated successfully!");
             window.location.reload();
         } catch (error) {
             console.error("Error updating game result: ", error);
             alert("Failed to update game result.");
         }
-    }
+    };
 
     function handleCompetitionFormSubmit(e) {
         e.preventDefault();
@@ -374,14 +405,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements.loginForm.style.display = 'none';
             })
             .catch(error => console.error("Error signing in: ", error));
-        fetchData("jogos", renderGames);
     });
 
     elements.logoutButton.addEventListener('click', () => {
         signOut(auth)
             .then(() => console.log("User signed out"))
             .catch(error => console.error("Error signing out: ", error));
-        fetchData("jogos", renderGames);
     });
 
     onAuthStateChanged(auth, handleAuthStateChanged);

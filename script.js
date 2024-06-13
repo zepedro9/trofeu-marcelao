@@ -245,7 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
                     if (userDoc) {
                         if (userDoc.Password === '') {
-                            // Set the new password
+                            // Setting the new password is not working for some reason..
+                            console.log("Hashed password: " + hashedPassword);
+                            console.log("Doc: " + doc(db, "jogadores", userDoc.id));
+                            console.log("Update doc: " + updateDoc(doc(db, "jogadores", userDoc.id), { Password: hashedPassword }));
                             await updateDoc(doc(db, "jogadores", userDoc.id), { Password: hashedPassword });
                             await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Password criada e previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);

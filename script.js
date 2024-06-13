@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loginButton: document.getElementById('login-button'),
         logoutButton: document.getElementById('logout-button'),
         adminGameSection: document.getElementById('admin-game-section'),
-        adminCompetitionSection: document.getElementById('admin-competition-section'),
+        //adminCompetitionSection: document.getElementById('admin-competition-section'),
         gameForm: document.getElementById('create-game-form'),
         jogosPage: document.getElementById('jogos-page'),
-        competitionPage: document.getElementById('competition-page'),
+        //competitionPage: document.getElementById('competition-page'),
         classificacaoPage: document.getElementById('classificacao-page'),
         jogosLink: document.getElementById('jogos-link'),
-        competitionLink: document.getElementById('competition-link'),
+        //competitionLink: document.getElementById('competition-link'),
         classificacaoLink: document.getElementById('classificacao-link'),
         competitionInfoDiv: document.getElementById('competition-info'),
         competitionForm: document.getElementById('competition-form'),
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showPage(page) {
-        const pages = ['jogos', 'competition', 'classificacao'];
+        const pages = ['jogos'/*, 'competition'*/, 'classificacao'];
         pages.forEach(p => {
             elements[`${p}Page`].style.display = p === page ? 'block' : 'none';
             elements[`${p}Link`].classList.toggle('active', p === page);
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const display = user ? 'block' : 'none';
         isAdminLoggedIn = user ? true : false;
         elements.adminGameSection.style.display = display;
-        elements.adminCompetitionSection.style.display = display;
+        //elements.adminCompetitionSection.style.display = display;
         elements.adminLoginButton.style.display = user ? 'none' : 'block';
         elements.logoutButton.style.display = user ? 'block' : 'none';
     }

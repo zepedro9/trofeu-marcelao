@@ -153,11 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div>
                                 <label for="${game.id}-casa">${game.Casa}:</label>
-                                <input type="number" id="${game.id}-casa" name="casa" required/>
+                                <input type="number" id="${game.id}-casa" name="casa" min="0" max="20" required/>
                             </div>
                             <div>
                                 <label for="${game.id}-fora">${game.Fora}:</label>
-                                <input type="number" id="${game.id}-fora" name="fora" required/>
+                                <input type="number" id="${game.id}-fora" name="fora" min="0" max="20" required/>
                             </div>
                             <div>
                                 <label for="${game.id}-password">Password:</label>

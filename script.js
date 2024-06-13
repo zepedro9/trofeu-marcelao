@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                         // Check if the prediction is correct
                         if (`${prediction.Casa} - ${prediction.Fora}` === result) {
-                            points += 2; // Additional 2 points for a correct prediction
+                            points += 3; // Additional 3 points for a correct prediction
                         }
     
                         // Update the user's points

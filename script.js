@@ -1,5 +1,5 @@
 import { app } from './firebaseConfig.js';
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -338,8 +338,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = casaScore + " - " + foraScore;
     
         try {
+            // Create a batch
+            const batch = writeBatch(db);
+    
             // Update game result
-            await updateDoc(doc(db, "jogos", gameId), { Resultado: result });
+            const gameRef = doc(db, "jogos", gameId);
+            batch.update(gameRef, { Resultado: result });
     
             // Fetch predictions for this game
             const predictionsSnapshot = await getDocs(collection(db, 'previsoes'));
@@ -350,8 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
             // Update points for each user
-            const batch = db.batch();
-    
             predictions.forEach(prediction => {
                 if (prediction.Jogo === gameId) {
                     // Find the user who made the prediction
@@ -362,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                         // Check if the prediction is correct
                         if (`${prediction.Casa} - ${prediction.Fora}` === result) {
-                            points += 3; // Additional 3 points for a correct prediction
+                            points += 2; // Additional 2 points for a correct prediction
                         }
     
                         // Update the user's points
@@ -381,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error updating game result and points: ", error);
             alert("Failed to update game result and points.");
         }
-    };    
+    };
 
     function handleCompetitionFormSubmit(e) {
         e.preventDefault();

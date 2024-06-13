@@ -125,13 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="subdued">${gameDateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
                     <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
-                    ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
 
                     ${isPastGame && usersWithPredictions.length > 0 ? `
                         <p class="separator"></p>
                         <p class="highlight">Previsões</p>
                         ${usersWithPredictions.map(user => `
-                            <p class="subdued">${user.Nome}: ${predictionLookup[game.id][user.Nome].Casa} - ${predictionLookup[game.id][user.Nome].Fora}</p>
+                            <p class="subdued ${(game.Resultado == (predictionLookup[game.id][user.Nome].Casa + " - " + predictionLookup[game.id][user.Nome].Fora)) ? 'winner' : ''}">${user.Nome}: ${predictionLookup[game.id][user.Nome].Casa} - ${predictionLookup[game.id][user.Nome].Fora}</p>
                         `).join('')}
                     ` : ''}
 
@@ -313,8 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Fora: document.getElementById('fora').value,
             Data: new Date(document.getElementById('data').value),
             Competicao: document.getElementById('competicao').value,
-            Resultado: document.getElementById('resultado').value,
-            Vencedor: document.getElementById('vencedor').value,
+            Resultado: "",
         };
         addDocument("jogos", data, () => fetchData("jogos", renderGames));
         elements.gameForm.reset();

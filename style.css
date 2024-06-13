@@ -334,3 +334,8 @@ p.separator {
     height: 1px;
     background: gold;
 }
+
+.winner {
+    color: gold !important;
+    font-weight: bold !important;
+}

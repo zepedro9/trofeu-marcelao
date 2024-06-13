@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </form>
                     ` : ''}
 
-                    ${isPastGame && isAdminLoggedIn ? `
+                    ${isPastGame && isAdminLoggedIn && !game.Resultado ? `
                         <form id="set-game-result-form" onsubmit="handleSetGameResultFormSubmit(event, '${game.id}')">
                             <input type="text" id="casa" placeholder="${game.Casa}" required />
                             <input type="text" id="fora" placeholder="${game.Fora}" required />
@@ -339,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
             alert("Game result updated successfully!");
+            window.location.reload();
         } catch (error) {
             console.error("Error updating game result: ", error);
             alert("Failed to update game result.");

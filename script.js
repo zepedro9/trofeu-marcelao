@@ -102,11 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Create a lookup for predictions by game and user
         const predictionLookup = predictions.reduce((acc, pred) => {
             if (!acc[pred.Jogo]) {
-                acc[pred.Jogo] = new Set();
+                acc[pred.Jogo] = {};
             }
-            acc[pred.Jogo].add(pred.Jogador);
+            acc[pred.Jogo][pred.Jogador] = pred;  // Store the entire prediction object
             return acc;
-        }, {});
+        }, {});        
     
         // Sort the games array with the newest games first
         games.sort((a, b) => b.Data.toDate() - a.Data.toDate());
@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const gameDateTime = new Date(game.Data.toDate().toLocaleString('en-US', { timeZone: 'Europe/Lisbon' }));
             const isPastGame = getIsPastGame(gameDateTime);
 
-            // Filter users who have not made a prediction for this game
-            const availableUsers = users.filter(user => !predictionLookup[game.id] || !predictionLookup[game.id].has(user.Nome));
+            const usersWithoutPredictions = users.filter(user => !predictionLookup[game.id] || !predictionLookup[game.id][user.Nome]);
+            const usersWithPredictions = users.filter(user => predictionLookup[game.id] && predictionLookup[game.id][user.Nome]);
 
             return `
                 <div id="${game.id}" class="game-box ${isPastGame ? 'past-game' : ''}">
@@ -126,35 +126,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="subdued">${gameDateTime.toLocaleDateString('en-GB')}</p>
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
-                    ${!isPastGame && availableUsers.length > 0 ? `<form id="${game.id}-prediction-form" class="prediction-form hidden">
+
+                    ${!isPastGame && usersWithPredictions.length > 0 ? `
                         <p class="separator"></p>
-                        <p class="highlight">Submeter previsão:</p>
-                        <p>Seleciona quem és:</p>
-                        <div>
-                            ${availableUsers.map(user => `
-                                <div class="user-selector">
-                                    <input type="radio" id="${game.id}-${user.id}" name="username" value="${user.Nome}" required>
-                                    <label for="${game.id}-${user.id}">${user.Nome}</label>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div>
-                            <label for="${game.id}-casa">${game.Casa}:</label>
-                            <input type="number" id="${game.id}-casa" name="casa" required/>
-                        </div>
-                        <div>
-                            <label for="${game.id}-fora">${game.Fora}:</label>
-                            <input type="number" id="${game.id}-fora" name="fora" required/>
-                        </div>
-                        <div>
-                            <label for="${game.id}-password">Password:</label>
-                            <input type="password" id="${game.id}-password" name="password" required/>
-                        </div>
-                        <button type="submit">Submit Prediction</button>
-                    </form>` : ''}
+                        <p class="highlight">Previsões</p>
+                        ${usersWithPredictions.map(user => `
+                            <p class="subdued">${user.Nome}: ${predictionLookup[game.id][user.Nome].predictionField}</p>
+                        `).join('')}
+                    ` : ''}
+
+                    ${!isPastGame && usersWithoutPredictions.length > 0 ? `
+                        <form id="${game.id}-prediction-form" class="prediction-form hidden">
+                            <p class="separator"></p>
+                            <p class="highlight">Submeter previsão:</p>
+                            <p>Seleciona quem és:</p>
+                            <div>
+                                ${usersWithoutPredictions.map(user => `
+                                    <div class="user-selector">
+                                        <input type="radio" id="${game.id}-${user.id}" name="username" value="${user.Nome}" required>
+                                        <label for="${game.id}-${user.id}">${user.Nome}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div>
+                                <label for="${game.id}-casa">${game.Casa}:</label>
+                                <input type="number" id="${game.id}-casa" name="casa" required/>
+                            </div>
+                            <div>
+                                <label for="${game.id}-fora">${game.Fora}:</label>
+                                <input type="number" id="${game.id}-fora" name="fora" required/>
+                            </div>
+                            <div>
+                                <label for="${game.id}-password">Password:</label>
+                                <input type="password" id="${game.id}-password" name="password" required/>
+                            </div>
+                            <button type="submit">Submit Prediction</button>
+                        </form>
+                    ` : ''}
                 </div>
             `;
-        }).join('') || "Error loading game information.";
+        }).join('') || "Não há jogos para mostrar de momento.";
     
         document.querySelectorAll('.game-box').forEach(box => {
             if (!box.classList.contains('past-game')) {

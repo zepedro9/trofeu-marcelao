@@ -5,7 +5,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 document.addEventListener('DOMContentLoaded', () => {
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const isAdminLoggedIn = false
+    var isAdminLoggedIn = false
 
     const elements = {
         navToggle: document.querySelector('.nav-toggle'),

@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     elements.jogosLink.addEventListener('click', () => showPage('jogos'));
-    elements.competitionLink.addEventListener('click', () => showPage('competition'));
+    //elements.competitionLink.addEventListener('click', () => showPage('competition'));
     elements.classificacaoLink.addEventListener('click', () => showPage('classificacao'));
 
     elements.adminLoginButton.addEventListener('click', toggleLoginForm);
@@ -422,10 +422,10 @@ document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, handleAuthStateChanged);
 
     elements.gameForm.addEventListener('submit', handleCreateGameFormSubmit);
-    elements.competitionForm.addEventListener('submit', handleCompetitionFormSubmit);
+    //elements.competitionForm.addEventListener('submit', handleCompetitionFormSubmit);
 
     fetchData("jogos", renderGames);
-    fetchData("competicoes", renderCompetitions);
+    //fetchData("competicoes", renderCompetitions);
     fetchData("jogadores", renderLeaderboard);
 
     showPage('jogos');

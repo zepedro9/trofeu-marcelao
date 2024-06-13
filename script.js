@@ -372,12 +372,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements.loginForm.style.display = 'none';
             })
             .catch(error => console.error("Error signing in: ", error));
+        window.location.reload();
     });
 
     elements.logoutButton.addEventListener('click', () => {
         signOut(auth)
             .then(() => console.log("User signed out"))
             .catch(error => console.error("Error signing out: ", error));
+        window.location.reload();
     });
 
     onAuthStateChanged(auth, handleAuthStateChanged);

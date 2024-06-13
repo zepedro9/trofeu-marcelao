@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper function to hash passwords
-    async function hashPassword(password) {
+    function hashPassword(password) {
         const msgUint8 = new TextEncoder().encode(password);
         const hashBuffer = crypto.subtle.digest('SHA-256', msgUint8);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -234,7 +234,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const password = formData.get('password');
                     
                     const userDoc = users.find(user => user.Nome === username);
-                    const hashedPassword = await hashPassword(password);
+                    console.log("Password: " + password);
+                    const hashedPassword = hashPassword(password);
+                    console.log("Hashed password: " + hashedPassword);
 
                     const previsao = {
                         Casa: casa,
@@ -246,9 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (userDoc) {
                         if (userDoc.Password === '') {
                             // Setting the new password is not working for some reason..
-                            console.log("Hashed password: " + hashedPassword);
-                            console.log("Doc: " + doc(db, "jogadores", userDoc.id));
-                            console.log("Update doc: " + updateDoc(doc(db, "jogadores", userDoc.id), { Password: hashedPassword }));
                             await updateDoc(doc(db, "jogadores", userDoc.id), { Password: hashedPassword });
                             await addDoc(collection(db, 'previsoes'), previsao);
                             alert(`Password criada e previsão submetida: ${game.Casa} ${casa} - ${game.Fora} ${fora}`);

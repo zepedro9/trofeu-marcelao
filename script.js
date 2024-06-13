@@ -98,6 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }    
 
     async function renderGames(games) {
+        elements.gameInfoDiv.innerHTML = "";
+
         const users = await fetchUsers();
         const predictions = await fetchPredictions();
 
@@ -372,14 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 elements.loginForm.style.display = 'none';
             })
             .catch(error => console.error("Error signing in: ", error));
-        window.location.reload();
+        renderGames();
     });
 
     elements.logoutButton.addEventListener('click', () => {
         signOut(auth)
             .then(() => console.log("User signed out"))
             .catch(error => console.error("Error signing out: ", error));
-        window.location.reload();
+        renderGames();
     });
 
     onAuthStateChanged(auth, handleAuthStateChanged);

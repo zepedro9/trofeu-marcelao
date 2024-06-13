@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <form id="set-game-result-form" onsubmit="handleSetGameResultFormSubmit(event, '${game.id}')">
                             <input type="text" id="casa" placeholder="${game.Casa}" required />
                             <input type="text" id="fora" placeholder="${game.Fora}" required />
-                            <button type="submit">Submit Game</button>
+                            <button type="submit">Submit Result</button>
                         </form>
                     ` : ''}
                 </div>

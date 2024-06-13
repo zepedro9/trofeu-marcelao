@@ -216,7 +216,7 @@ footer {
 button {
     color: #222;
     border: none;
-    margin: 5px;
+    margin: 5px 0;
     width: 100%;
     padding: 10px 20px;
     border-radius: 5px;

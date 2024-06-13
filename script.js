@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleAuthStateChanged(user) {
         const display = user ? 'block' : 'none';
-        isAdminLoggedIn = true;
+        isAdminLoggedIn = user ? false : true;
         elements.adminGameSection.style.display = display;
         elements.adminCompetitionSection.style.display = display;
         elements.adminLoginButton.style.display = user ? 'none' : 'block';

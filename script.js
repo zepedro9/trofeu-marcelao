@@ -333,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const form = e.target;
         const data = {
-            Casa: form.querySelector(`#casa-${gameId}`).value,
-            Fora: form.querySelector(`#fora-${gameId}`).value,
+            Casa: form.querySelector('casa').value,
+            Fora: form.querySelector('fora').value,
         };
         try {
             await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });

@@ -328,13 +328,19 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.gameForm.reset();
     }
 
-    async function handleSetGameResultFormSubmit(e, gameId) {
+    window.handleSetGameResultFormSubmit = async function (e, gameId) {
         e.preventDefault();
         const data = {
-            Casa: document.getElementById('casa').value,
-            Fora: document.getElementById('fora').value,
+            Casa: document.getElementById(`casa-${gameId}`).value,
+            Fora: document.getElementById(`fora-${gameId}`).value,
         };
-        await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
+        try {
+            await updateDoc(doc(db, "jogos", gameId), { Resultado: data.Casa + " - " + data.Fora });
+            alert("Game result updated successfully!");
+        } catch (error) {
+            console.error("Error updating game result: ", error);
+            alert("Failed to update game result.");
+        }
     }
 
     function handleCompetitionFormSubmit(e) {

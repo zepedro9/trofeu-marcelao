@@ -1,5 +1,5 @@
 import { app } from './firebaseConfig.js';
-import { getFirestore, query, where, collection, getDoc, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -333,51 +333,55 @@ document.addEventListener('DOMContentLoaded', () => {
     window.handleSetGameResultFormSubmit = async function (e, gameId) {
         e.preventDefault();
         const form = e.target;
-        const data = {
-            Casa: form.querySelector('#casa').value,
-            Fora: form.querySelector('#fora').value,
-        };
-        const result = data.Casa + " - " + data.Fora;
+        const casaScore = form.querySelector('#casa').value;
+        const foraScore = form.querySelector('#fora').value;
+        const result = casaScore + " - " + foraScore;
     
         try {
             // Update game result
             await updateDoc(doc(db, "jogos", gameId), { Resultado: result });
     
-            // Fetch all predictions for this game
-            const predictionsQuery = query(collection(db, "previsoes"), where("Jogo", "==", gameId));
-            const predictionsSnapshot = await getDocs(predictionsQuery);
+            // Fetch predictions for this game
+            const predictionsSnapshot = await getDocs(collection(db, 'previsoes'));
+            const predictions = predictionsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
-            // Iterate through predictions and update points
-            const updatePromises = predictionsSnapshot.docs.map(async (predictionDoc) => {
-                const predictionData = predictionDoc.data();
-                const predictedResult = predictionData.Casa + " - " + predictionData.Fora;
+            // Fetch all users
+            const usersSnapshot = await getDocs(collection(db, 'jogadores'));
+            const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     
-                const playerDocRef = doc(db, "jogadores", predictionData.Jogador);
-                const playerDoc = await getDoc(playerDocRef);
+            // Update points for each user
+            const batch = db.batch();
     
-                if (playerDoc.exists()) {
-                    const currentPoints = playerDoc.data().Pontos || 0;
-                    let updatedPoints = currentPoints + 1; // Add 1 point for participation
+            predictions.forEach(prediction => {
+                if (prediction.Jogo === gameId) {
+                    // Find the user who made the prediction
+                    const user = users.find(user => user.Nome === prediction.Jogador);
+                    if (user) {
+                        let points = user.Pontos || 0;
+                        points += 1; // Everyone who made a prediction gets 1 point
     
-                    if (predictedResult === result) {
-                        updatedPoints += 3; // Add 3 points for correct prediction
+                        // Check if the prediction is correct
+                        if (`${prediction.Casa} - ${prediction.Fora}` === result) {
+                            points += 3; // Additional 3 points for a correct prediction
+                        }
+    
+                        // Update the user's points
+                        const userRef = doc(db, 'jogadores', user.id);
+                        batch.update(userRef, { Pontos: points });
                     }
-    
-                    // Update the player's points
-                    return updateDoc(playerDocRef, { Pontos: updatedPoints });
                 }
             });
     
-            // Wait for all updates to complete
-            await Promise.all(updatePromises);
+            // Commit the batch
+            await batch.commit();
     
-            alert("Game result updated successfully!");
+            alert("Game result and points updated successfully!");
             window.location.reload();
         } catch (error) {
-            console.error("Error updating game result: ", error);
-            alert("Failed to update game result.");
+            console.error("Error updating game result and points: ", error);
+            alert("Failed to update game result and points.");
         }
-    };
+    };    
 
     function handleCompetitionFormSubmit(e) {
         e.preventDefault();

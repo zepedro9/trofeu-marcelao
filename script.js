@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${game.Resultado ? `<p class="highlight">Resultado: ${game.Resultado}</p>` : ''}
                     ${game.Vencedor ? `<p class="highlight">Vencedor: ${game.Vencedor}</p>` : ''}
 
-                    ${!isPastGame && usersWithPredictions.length > 0 ? `
+                    ${isPastGame && usersWithPredictions.length > 0 ? `
                         <p class="separator"></p>
                         <p class="highlight">Previsões</p>
                         ${usersWithPredictions.map(user => `
